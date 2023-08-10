@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
-const Side_bar = () => {
+const Sidebar = () => {
   const SideDiv = styled.div`
     position: sticky;
     top: 74px;
@@ -14,4 +14,4 @@ const Side_bar = () => {
   return <SideDiv>Side-bar</SideDiv>;
 };
 
-export default Side_bar;
+export default Sidebar;
