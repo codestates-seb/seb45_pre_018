@@ -1,5 +1,5 @@
 import Header from "../Header";
-import Side_bar from "../Side_bar";
+import Side_bar from "../Sidebar";
 import Main from "../Main";
 import { styled } from "styled-components";
 import { useState } from "react";
