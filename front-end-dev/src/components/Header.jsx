@@ -1,12 +1,16 @@
 import logo from "/logo-stackoverflow.png";
 import search from "/search.png";
 import { styled } from "styled-components";
-
+import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 const Nav = styled.nav`
+  position: sticky;
+  top: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 10px;
+  background-color: white;
 `;
 
 const Logoimg = styled.img`
@@ -72,20 +76,27 @@ const Buttons = styled.button`
   }
 `;
 
-const Header = () => {
+const Header = ({ setIsClicked }) => {
+  const handleLogoClick = () => {
+    setIsClicked(false);
+  };
   return (
     <Nav>
-      <div>
-        <Logoimg src={logo} />
-      </div>
+      <Link to={"/"} onClick={handleLogoClick}>
+        <div>
+          <Logoimg src={logo} />
+        </div>
+      </Link>
       <Left>
         <LeftDiv>About</LeftDiv>
         <LeftDiv>Products</LeftDiv>
         <LeftDiv>For Teams</LeftDiv>
       </Left>
+
       <div>
         <Searchimg src={search} />
       </div>
+
       <RightDiv>
         <Buttons color="#39739d" backgroundColor="#E1ECF4" hoverColor="#A8C5E0">
           Log in
@@ -96,6 +107,10 @@ const Header = () => {
       </RightDiv>
     </Nav>
   );
+};
+
+Header.propTypes = {
+  setIsClicked: PropTypes.func.isRequired,
 };
 
 export default Header;

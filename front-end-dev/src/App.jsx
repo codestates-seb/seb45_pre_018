@@ -1,25 +1,18 @@
 import "./App.css";
-import Header from "./components/Header";
-import Main from "./components/Main";
-import Side from "./components/Side_bar";
-import { styled } from "styled-components";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Root from "./components/pages/Root";
+import Question from "./components/Question";
 
-const Body = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root />,
+    children: [{ path: "question", element: <Question /> }],
+  },
+]);
 
 function App() {
-  return (
-    <>
-      <Header />
-      <Body>
-        <Main />
-        <Side />
-      </Body>
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
