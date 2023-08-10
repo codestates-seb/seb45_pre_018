@@ -1,12 +1,12 @@
 import logo from "/logo-stackoverflow.png";
-import search from "/search.png";
+
 import { styled } from "styled-components";
 
 const Nav = styled.nav`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px    ;
+  padding: 5px;
 `;
 
 const Logoimg = styled.img`
@@ -50,9 +50,6 @@ const RightDiv = styled.div`
   justify-content: space-between;
 `;
 
-const Searchimg = styled.img`
-  height: 40px;
-`;
 
 const Buttons = styled.button`
   padding: 10px;
@@ -84,7 +81,7 @@ const Header = () => {
         <LeftDiv>For Teams</LeftDiv>
       </Left>
       <div>
-        <Searchimg src={search} />
+        
       </div>
       <RightDiv>
         <Buttons color="#39739d" backgroundColor="#E1ECF4" hoverColor="#A8C5E0">

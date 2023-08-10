@@ -1,6 +1,6 @@
-const Side_bar = () => {
-  return <div>Side-bar</div>;
+const Sidebar = () => {
+  return <div style={{width:'160px',height:'200px',position:"fixed",background:'skyblue'}}>Side-bar</div>;
 };
 
-export default Side_bar;
-     
+export default Sidebar;
+      
