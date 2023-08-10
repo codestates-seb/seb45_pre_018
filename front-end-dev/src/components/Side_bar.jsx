@@ -6,8 +6,8 @@ const Side_bar = () => {
     top: 74px;
     display: flex;
     align-items: center;
-    width: 164px;
-    height: 400px;
+    width: 160px;
+    height: 200px;
     background-color: lightcyan;
     margin-left: 20px;
   `;

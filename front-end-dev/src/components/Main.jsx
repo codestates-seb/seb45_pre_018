@@ -16,7 +16,7 @@ const TopDiv = styled.div`
 `;
 
 const MainDiv = styled.div`
-  width: 60%;
+  width: 80%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
