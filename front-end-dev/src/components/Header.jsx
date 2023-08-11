@@ -10,6 +10,7 @@ const Nav = styled.nav`
   justify-content: center;
   align-items: center;
   padding: 5px;
+  background-color: white;
 `;
 
 const Logoimg = styled.img`
@@ -71,13 +72,10 @@ const Buttons = styled.button`
   }
 `;
 
-const Header = ({ setIsClicked }) => {
-  const handleLogoClick = () => {
-    setIsClicked(false);
-  };
+const Header = () => {
   return (
     <Nav>
-      <Link to={"/"} onClick={handleLogoClick}>
+      <Link to={"/"}>
         <div>
           <Logoimg src={logo} />
         </div>

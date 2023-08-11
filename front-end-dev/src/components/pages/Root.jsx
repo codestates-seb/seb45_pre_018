@@ -1,31 +1,23 @@
 import Header from "../Header";
-import Side_bar from "../Sidebar";
-import Main from "../Main";
+
+import Footer from "../Footer";
 import { styled } from "styled-components";
-import { useState } from "react";
+import { Outlet } from "react-router-dom";
+
 const Body = styled.div`
   display: flex;
-  height: 3000px;
+  justify-content: center;
 `;
 
 const Root = () => {
-  const [isClicked, setIsClicked] = useState(false);
   return (
     <>
       <div style={{ width: "100%" }}>
-        <div style={{ width: "1500px" }}>
-          <Header setIsClicked={setIsClicked} />
-          <Body>
-            {isClicked ? (
-              "hi"
-            ) : (
-              <>
-                <Side_bar />
-                <Main setIsClicked={setIsClicked} />
-              </>
-            )}
-          </Body>
-        </div>
+        <Header />
+        <Body>
+          <Outlet />
+        </Body>
+        <Footer />
       </div>
     </>
   );

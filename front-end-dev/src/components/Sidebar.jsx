@@ -5,9 +5,10 @@ const Sidebar = () => {
     position: sticky;
     top: 74px;
     display: flex;
+    justify-content: center;
     align-items: center;
     width: 160px;
-    height: 200px;
+    height: 400px;
     background-color: lightcyan;
     margin-left: 20px;
   `;

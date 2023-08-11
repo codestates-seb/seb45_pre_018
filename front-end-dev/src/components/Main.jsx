@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 90%;
   margin: 20px;
+  max-width: 1500px;
 `;
 
 const TopDiv = styled.div`
@@ -16,19 +16,21 @@ const TopDiv = styled.div`
 `;
 
 const MainDiv = styled.div`
-  width: 80%;
+  max-width: 1300px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 `;
 
-const Main = ({ setIsClicked }) => {
+const Main = () => {
   return (
     <MainContainer>
       <TopDiv>
-        Top Questions<AskBtn setIsClicked={setIsClicked}>Ask Question</AskBtn>
+        Top Questions<AskBtn>Ask Question</AskBtn>
       </TopDiv>
       <MainDiv>
+        MainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMain
+        MainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMain
         MainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMainMain
       </MainDiv>
     </MainContainer>

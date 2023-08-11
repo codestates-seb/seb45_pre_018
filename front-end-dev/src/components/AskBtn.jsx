@@ -19,12 +19,11 @@ const AskedBtn = styled.button`
     background-color: #0971cc;
   }
 `;
-const AskBtn = ({ setIsClicked }) => {
+const AskBtn = () => {
   const navigate = useNavigate();
 
   const navigateHandler = () => {
     navigate("/question");
-    setIsClicked(true);
   };
   return <AskedBtn onClick={navigateHandler}>Ask Question</AskedBtn>;
 };
