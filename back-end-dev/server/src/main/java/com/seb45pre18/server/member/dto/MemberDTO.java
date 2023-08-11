@@ -1,4 +1,4 @@
-package com.pre_project.member.dto;
+package com.seb45pre18.server.member.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

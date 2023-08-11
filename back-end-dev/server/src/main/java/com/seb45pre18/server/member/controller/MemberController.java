@@ -1,7 +1,7 @@
-package com.pre_project.member.controller;
+package com.seb45pre18.server.member.controller;
 
-import com.pre_project.member.dto.MemberDTO;
-import com.pre_project.member.service.MemberService;
+import com.seb45pre18.server.member.dto.MemberDTO;
+import com.seb45pre18.server.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class MemberController {
 
     //생성자 주입
-    private  final  MemberService memberService;
+    private  final MemberService memberService;
 
 
     //회원가입 페이지 출력 요청

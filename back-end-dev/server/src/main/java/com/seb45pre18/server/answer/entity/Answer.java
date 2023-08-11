@@ -1,7 +1,7 @@
 package com.seb45pre18.server.answer.entity;
 
 
-import com.seb45pre18.server.question.Question;
+import com.seb45pre18.server.question.entity.Question;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

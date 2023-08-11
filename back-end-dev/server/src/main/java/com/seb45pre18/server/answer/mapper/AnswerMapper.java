@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AnswerMapper {
 
-    public Answer answerPostToAnswer(AnswerDto.post requestBody){
+    public Answer answerPostToAnswer(AnswerDto.Post requestBody){
         if(requestBody == null) return null;
 
         Answer answer = new Answer();
