@@ -2,7 +2,11 @@ package com.seb45pre18.server.question.service;
 
 import com.seb45pre18.server.question.entity.Question;
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Service
+@Transactional
 public class QuestionService {
 
     // 질문 등록 메서드
