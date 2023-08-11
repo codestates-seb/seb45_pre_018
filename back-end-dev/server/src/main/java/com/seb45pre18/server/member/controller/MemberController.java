@@ -9,12 +9,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
 
     //생성자 주입
-    private  final MemberService memberService;
+    private  final  MemberService memberService;
 
 
     //회원가입 페이지 출력 요청
@@ -30,6 +32,20 @@ public class MemberController {
         System.out.println("memberDto = " + memberDTO);
         memberService.save(memberDTO);
 
-        return "index";
+        return "login";
+    }
+
+    @PostMapping("/member/login")
+    public String login(@ModelAttribute MemberDTO memberDTO, HttpSession session){
+        MemberDTO loginResult = memberService.login(memberDTO);
+        if(loginResult!= null){
+            //login 성공
+            session.setAttribute("loginId",loginResult.getId());
+            return "main";
+        }
+        else{
+            //login 실패
+            return "login";
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.seb45pre18.server.member.entity;
 
+import com.seb45pre18.server.member.dto.MemberDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,4 +23,12 @@ public class MemberEntity {
 
     @Column
     private String memberPassword;
+
+    public static  MemberEntity toMemberEntity(MemberDTO memberDTO){
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setMemberId(String.valueOf(memberDTO.getId()));
+        memberEntity.setMemberName(memberDTO.getMemberName());
+        memberEntity.setMemberPassword(memberDTO.getMemberPassword());
+        return memberEntity;
+    }
 }
