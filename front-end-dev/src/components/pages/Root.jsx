@@ -12,7 +12,7 @@ const Body = styled.div`
 const Root = () => {
   return (
     <>
-      <div style={{ width: "100%" }}>
+      <div className="hi">
         <Header />
         <Body>
           <Outlet />

@@ -2,7 +2,6 @@ import logo from "/logo-stackoverflow.png";
 
 import { styled } from "styled-components";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
 const Nav = styled.nav`
   position: sticky;
   top: 0;
@@ -98,10 +97,6 @@ const Header = () => {
       </RightDiv>
     </Nav>
   );
-};
-
-Header.propTypes = {
-  setIsClicked: PropTypes.func.isRequired,
 };
 
 export default Header;

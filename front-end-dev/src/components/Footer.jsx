@@ -4,11 +4,11 @@ const FooterDiv = styled.div`
   background-color: black;
   height: 340px;
   color: white;
-  width: 100vw;
+  width: 100%;
 `;
 
 const Footer = () => {
-  return <FooterDiv>Footer</FooterDiv>;
+  return <FooterDiv></FooterDiv>;
 };
 
 export default Footer;
