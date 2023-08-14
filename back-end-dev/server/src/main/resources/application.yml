@@ -12,11 +12,18 @@ server:
   datasource:
     url: jdbc:h2:mem:test
 
+
 spring:
   profiles:
     include: db, file
+  thymeleaf:
+    cache: false
   jpa:
     hibernate:
+      ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   datasource:
+  database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  open-in-view: false
+  show-sql: true

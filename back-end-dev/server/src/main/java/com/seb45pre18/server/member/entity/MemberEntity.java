@@ -12,23 +12,33 @@ import javax.persistence.*;
 @Table(name = "member_table")
 public class MemberEntity {
     @Id // pk 지정
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
     private Long id;
 
     @Column(unique = true) // unique 제약조건 추가
-    private String memberName;
-
-    @Column
     private String memberId;
 
     @Column
-    private String memberPassword;
+    private String password;
 
-    public static  MemberEntity toMemberEntity(MemberDTO memberDTO){
+    @Column
+    private String name;
+
+    public static MemberEntity toMemberEntity(MemberDTO memberDTO) {
         MemberEntity memberEntity = new MemberEntity();
-        memberEntity.setMemberId(String.valueOf(memberDTO.getId()));
-        memberEntity.setMemberName(memberDTO.getMemberName());
-        memberEntity.setMemberPassword(memberDTO.getMemberPassword());
+        memberEntity.setMemberId(memberDTO.getMemberId());
+        memberEntity.setPassword(memberDTO.getPassword());
+        memberEntity.setName(memberDTO.getName());
         return memberEntity;
     }
+
+    public static MemberEntity toUpdateMemberEntity(MemberDTO memberDTO) {
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setId(memberDTO.getId());
+        memberEntity.setMemberId(memberDTO.getMemberId());
+        memberEntity.setPassword(memberDTO.getPassword());
+        memberEntity.setName(memberDTO.getName());
+        return memberEntity;
+    }
+
 }
