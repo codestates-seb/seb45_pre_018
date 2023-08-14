@@ -74,7 +74,7 @@ const Buttons = styled.button`
 const Header = () => {
   return (
     <Nav>
-      <Link to={"/"}>
+      <Link to="/">
         <div>
           <Logoimg src={logo} />
         </div>
