@@ -1,13 +1,11 @@
 package com.seb45pre18.server.question.entity;
 
+import com.seb45pre18.server.member.entity.MemberEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -23,7 +21,19 @@ public class Question {
 
     private String content;
 
+    private String expect;
+
     private Integer view;
 
+    private Integer answer_count;
+
     private LocalDateTime createdAt = LocalDateTime.now();
+
+//    @ManyToOne
+//    @JoinColumn(name = "Member_Id")
+//    private MemberEntity member;
+//
+//    public void setMember(MemberEntity member) {
+//        this.member = member;
+//    }
 }

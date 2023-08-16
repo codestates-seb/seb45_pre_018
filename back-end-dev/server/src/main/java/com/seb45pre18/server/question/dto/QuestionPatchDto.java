@@ -14,6 +14,9 @@ public class QuestionPatchDto {
     @NotBlank
     private String content;
 
+    @NotBlank
+    private String expect;
+
     public void setQuestionId(long questionId) {
         this.questionId = questionId;
     }

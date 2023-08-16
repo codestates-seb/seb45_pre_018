@@ -1,5 +1,6 @@
 package com.seb45pre18.server.question.controller;
 
+import com.seb45pre18.server.question.dto.MultiResponseDto;
 import com.seb45pre18.server.question.dto.QuestionPatchDto;
 import com.seb45pre18.server.question.dto.QuestionPostDto;
 import com.seb45pre18.server.question.entity.Question;
@@ -14,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/questions")
@@ -31,6 +33,7 @@ public class QuestionController {
     public ResponseEntity postQuestion(@Valid @RequestBody QuestionPostDto questionDto) {
         Question question = mapper.questionPostDtoToQuestion(questionDto);
         question.setView(0);
+        question.setAnswer_count(0);
         
         // TODO : QuestionService에서 질문 생성 메서드 작성 후 적용
         Question createQuestion = questionService.createQuestion(question);
@@ -73,13 +76,15 @@ public class QuestionController {
 
     // 메인 페이지 질문 리스트 조회
     @GetMapping
-    public ResponseEntity getQuestions(@Positive @RequestParam int page,
-                                       @Positive @RequestParam int size) {
+    public ResponseEntity getQuestions(@Positive @RequestParam int page) {
         // TODO : QuestionService에서 질문들을 페이지 별로 받아올 메서드 작성 후 적용
         // TODO : Pagenation 적용
-        Page<Question> pageQuestions = questionService.findQuestions(page, size);
+        Page<Question> pageQuestions = questionService.findQuestions(page - 1);
+        List<Question> questions = pageQuestions.getContent();
+
         // TODO : ResponseEntity 넘겨주는거 추가 필요
-        return null;
+        return new ResponseEntity<>(new MultiResponseDto<>(mapper.questionsToQuestionResponseDtos(questions),
+                pageQuestions), HttpStatus.OK);
     }
 
     // 질문 삭제
