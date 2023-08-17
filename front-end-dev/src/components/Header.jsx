@@ -10,6 +10,7 @@ const Nav = styled.nav`
   align-items: center;
   padding: 5px;
   background-color: white;
+  z-index: 100;
 `;
 
 const Logoimg = styled.img`
@@ -63,11 +64,11 @@ const Buttons = styled.button`
   cursor: pointer;
   transition: background-color 0.3s;
 
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${(props) => props.backgroundcolor};
   color: ${(props) => props.color};
 
   &:hover {
-    background-color: ${(props) => props.hoverColor};
+    background-color: ${(props) => props.hovercolor};
   }
 `;
 
@@ -88,10 +89,10 @@ const Header = () => {
       <div></div>
 
       <RightDiv>
-        <Buttons color="#39739d" backgroundColor="#E1ECF4" hoverColor="#A8C5E0">
+        <Buttons color="#39739d" backgroundcolor="#E1ECF4" hovercolor="#A8C5E0">
           Log in
         </Buttons>
-        <Buttons color="#FFFFFF" backgroundColor="#0A95FF" hoverColor="#0971CC">
+        <Buttons color="#FFFFFF" backgroundcolor="#0A95FF" hovercolor="#0971CC">
           Sign up
         </Buttons>
       </RightDiv>

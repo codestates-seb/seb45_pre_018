@@ -1,5 +1,6 @@
 import { styled } from "styled-components";
 import AskBtn from "./AskBtn";
+import { Link } from "react-router-dom";
 
 const MainContainer = styled.div`
   display: flex;
@@ -30,7 +31,7 @@ const SubDivLeft = styled.div`
   margin-bottom: 10px;
 `;
 const MainDivRight = styled.div`
-  font-size: 2rem;
+  font-size: 1.5rem;
 `;
 
 const SubDivRight = styled.div`
@@ -43,12 +44,32 @@ const SubDivRight = styled.div`
 const TitleDiv = styled.div`
   width: 1100px;
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
+  font-weight: bold;
+  margin-bottom: 10px;
+`;
+
+const ContentsDiv = styled.p`
+  font-size: 1.2rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 `;
 const DateDiv = styled.div`
   display: flex;
   justify-content: end;
   font-size: 1.2rem;
+`;
+
+const StyledLink = styled(Link)`
+  color: #0074cc;
+  text-decoration: none;
+
+  &:hover {
+    color: #0a95ff;
+  }
 `;
 
 const detailDate = (a) => {
@@ -71,28 +92,35 @@ const detailDate = (a) => {
 
 const Main = () => {
   const questions = JSON.parse(localStorage.getItem("questions")) || [];
+
   return (
     <MainContainer>
       <TopDiv>
-        Top Questions<AskBtn>Ask Question</AskBtn>
+        All Questions<AskBtn>Ask Question</AskBtn>
       </TopDiv>
-      {questions.map((question, index) => (
-        <Mainwrapper key={index}>
-          <MainDivLeft>
-            <SubDivLeft>0 votes</SubDivLeft>
-            <SubDivLeft>0 answers</SubDivLeft>
-            <SubDivLeft>0 views</SubDivLeft>
-          </MainDivLeft>
-          <MainDivRight>
-            <SubDivRight>
-              <TitleDiv>{question.title}</TitleDiv>
-              <DateDiv>
-                asked {detailDate(new Date(question.createdAt))}
-              </DateDiv>
-            </SubDivRight>
-          </MainDivRight>
-        </Mainwrapper>
-      ))}
+      {questions
+        .slice()
+        .reverse()
+        .map((question, index) => (
+          <Mainwrapper key={index}>
+            <MainDivLeft>
+              <SubDivLeft>0 votes</SubDivLeft>
+              <SubDivLeft>{question.answers} answers</SubDivLeft>
+              <SubDivLeft>{question.views} views</SubDivLeft>
+            </MainDivLeft>
+            <MainDivRight>
+              <SubDivRight>
+                <TitleDiv>
+                  <StyledLink to={question.id}>{question.title} </StyledLink>
+                </TitleDiv>
+                <ContentsDiv> {question.detail}</ContentsDiv>
+                <DateDiv>
+                  asked {detailDate(new Date(question.createdAt))}
+                </DateDiv>
+              </SubDivRight>
+            </MainDivRight>
+          </Mainwrapper>
+        ))}
     </MainContainer>
   );
 };

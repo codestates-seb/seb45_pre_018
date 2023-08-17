@@ -1,8 +1,9 @@
 import Header from "../Header";
-
+import Sidebar from "../Sidebar";
 import Footer from "../Footer";
+import Scroll from "../Scroll";
 import { styled } from "styled-components";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 const Body = styled.div`
   display: flex;
@@ -10,15 +11,17 @@ const Body = styled.div`
 `;
 
 const Root = () => {
+  const location = useLocation();
+  const hideSidebar = location.pathname.includes("/question");
   return (
     <>
-      <div className="hi">
-        <Header />
-        <Body>
-          <Outlet />
-        </Body>
-        <Footer />
-      </div>
+      <Header />
+      <Scroll />
+      <Body>
+        {!hideSidebar && <Sidebar />}
+        <Outlet />
+      </Body>
+      <Footer />
     </>
   );
 };

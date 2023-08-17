@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
+import { v4 as uuidv4 } from "uuid";
 
 const QuestionContainer = styled.div`
   display: flex;
@@ -71,7 +72,7 @@ const InputTag = styled.input`
   margin-top: 10px;
   border: 2px solid whitesmoke;
   padding: 10px;
-  cursor: ${(props) => (props.isStep ? "auto" : "not-allowed")};
+  cursor: ${(props) => (props.isstep ? "auto" : "not-allowed")};
 `;
 
 const WriteForm = styled.div`
@@ -80,12 +81,12 @@ const WriteForm = styled.div`
   border-radius: 10px;
   border: 2px solid #bbe0fb;
   margin-bottom: 16px;
-  opacity: ${(props) => (props.isStep ? 1 : 0.3)};
-  cursor: ${(props) => (props.isStep ? "auto" : "not-allowed")};
+  opacity: ${(props) => (props.isstep ? 1 : 0.3)};
+  cursor: ${(props) => (props.isstep ? "auto" : "not-allowed")};
 `;
 
 const LabelTag = styled.div`
-  opacity: ${(props) => (props.isStep ? 1 : 0.3)};
+  opacity: ${(props) => (props.isstep ? 1 : 0.3)};
 `;
 
 const TextArea = styled.textarea`
@@ -96,7 +97,7 @@ const TextArea = styled.textarea`
   width: 70%;
   min-height: 200px;
   resize: vertical;
-  cursor: ${(props) => (props.isStep ? "auto" : "not-allowed")};
+  cursor: ${(props) => (props.isstep ? "auto" : "not-allowed")};
 `;
 
 const TitleLengthCheckDive = styled.div`
@@ -134,12 +135,16 @@ const Question = () => {
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
+    const newId = uuidv4();
     const newQuestion = {
+      id: newId,
       title: titleCheck,
       detail: detailCheck,
       expect: expectCheck,
       tags: tagCheck,
       createdAt: new Date().toISOString(),
+      views: 0,
+      answers: 0,
     };
 
     const questions = JSON.parse(localStorage.getItem("questions")) || [];
@@ -199,7 +204,7 @@ const Question = () => {
             type="text"
             value={titleCheck}
             placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
-            isStep={currentStep >= 1}
+            isstep={currentStep >= 1}
             onChange={titleHandler}
           />
           {currentStep === 1 && (
@@ -209,8 +214,8 @@ const Question = () => {
           )}
         </WriteTitle>
 
-        <WriteForm isStep={currentStep >= 2} disabled={currentStep < 2}>
-          <LabelTag isStep={currentStep >= 2}>
+        <WriteForm isstep={currentStep >= 2} disabled={currentStep < 2}>
+          <LabelTag isstep={currentStep >= 2}>
             <b>What are the details of your problem?</b>
             <p>
               Introduce the problem and expand on what you put in the title.
@@ -220,7 +225,7 @@ const Question = () => {
           <TextArea
             value={detailCheck}
             minLength={20}
-            isStep={currentStep >= 2}
+            isstep={currentStep >= 2}
             disabled={currentStep < 2}
             onChange={detailHandler}
           />
@@ -235,8 +240,8 @@ const Question = () => {
           )}
         </WriteForm>
 
-        <WriteForm isStep={currentStep >= 3} disabled={currentStep < 3}>
-          <LabelTag isStep={currentStep >= 3}>
+        <WriteForm isstep={currentStep >= 3} disabled={currentStep < 3}>
+          <LabelTag isstep={currentStep >= 3}>
             <b>What did you try and what were you expecting?</b>
             <p>
               Describe what you tried, what you expected to happen, and what
@@ -246,7 +251,7 @@ const Question = () => {
           <TextArea
             value={expectCheck}
             minLength={20}
-            isStep={currentStep >= 3}
+            isstep={currentStep >= 3}
             disabled={currentStep < 3}
             onChange={expectHandler}
           />
@@ -261,8 +266,8 @@ const Question = () => {
           )}
         </WriteForm>
 
-        <WriteForm isStep={currentStep >= 4} disabled={currentStep < 4}>
-          <LabelTag isStep={currentStep >= 4}>
+        <WriteForm isstep={currentStep >= 4} disabled={currentStep < 4}>
+          <LabelTag isstep={currentStep >= 4}>
             <b>Tags</b>
             <p>
               Add up to 5 tags to describe what your question is about. Start
@@ -273,7 +278,7 @@ const Question = () => {
             type="text"
             value={tagCheck}
             placeholder="e.g (vba css mysql)"
-            isStep={currentStep >= 4}
+            isstep={currentStep >= 4}
             disabled={currentStep < 4}
             onChange={tagHandler}
           ></InputTag>
