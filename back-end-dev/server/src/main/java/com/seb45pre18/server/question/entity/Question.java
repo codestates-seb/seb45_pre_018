@@ -29,11 +29,11 @@ public class Question {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-//    @ManyToOne
-//    @JoinColumn(name = "Member_Id")
-//    private MemberEntity member;
-//
-//    public void setMember(MemberEntity member) {
-//        this.member = member;
-//    }
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")
+    private MemberEntity member;
+
+    public void setMember(MemberEntity member) {
+        this.member = member;
+    }
 }

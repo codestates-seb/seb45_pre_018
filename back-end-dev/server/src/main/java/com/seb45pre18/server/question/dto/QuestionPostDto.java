@@ -17,12 +17,12 @@ public class QuestionPostDto {
     @NotBlank
     private String expect;
 
-//    @Positive
-//    private long memberId;
-//
-//    public MemberEntity getMember() {
-//        MemberEntity member = new MemberEntity();
-//        member.setId(memberId);
-//        return member;
-//    }
+    @Positive
+    private long memberId;
+
+    public MemberEntity getMember() {
+        MemberEntity member = new MemberEntity();
+        member.setId(memberId);
+        return member;
+    }
 }

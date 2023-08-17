@@ -1,10 +1,14 @@
 package com.seb45pre18.server.question.controller;
 
+import com.seb45pre18.server.member.dto.MemberDTO;
+import com.seb45pre18.server.member.entity.MemberEntity;
+import com.seb45pre18.server.member.service.MemberService;
 import com.seb45pre18.server.question.dto.MultiResponseDto;
 import com.seb45pre18.server.question.dto.QuestionPatchDto;
 import com.seb45pre18.server.question.dto.QuestionPostDto;
 import com.seb45pre18.server.question.entity.Question;
 import com.seb45pre18.server.question.mapper.QuestionMapper;
+import com.seb45pre18.server.question.repository.QuestionRepository;
 import com.seb45pre18.server.question.service.QuestionService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -20,12 +24,19 @@ import java.util.List;
 @RestController
 @RequestMapping("/questions")
 public class QuestionController {
+    private final QuestionRepository questionRepository;
     private final QuestionService questionService;
     private final QuestionMapper mapper;
+    private final MemberService memberService;
 
-    public QuestionController(QuestionService questionService, QuestionMapper mapper) {
+    public QuestionController(QuestionRepository questionRepository,
+                              QuestionService questionService,
+                              QuestionMapper mapper,
+                              MemberService memberService) {
+        this.questionRepository = questionRepository;
         this.questionService = questionService;
         this.mapper = mapper;
+        this.memberService = memberService;
     }
 
     // 질문 작성
@@ -34,6 +45,10 @@ public class QuestionController {
         Question question = mapper.questionPostDtoToQuestion(questionDto);
         question.setView(0);
         question.setAnswer_count(0);
+
+        // TODO : Member Service 수정 후 주석 제거
+//        MemberEntity member = memberService.findEntity(question.getMember().getId());
+//        question.setMember(member);
         
         // TODO : QuestionService에서 질문 생성 메서드 작성 후 적용
         Question createQuestion = questionService.createQuestion(question);

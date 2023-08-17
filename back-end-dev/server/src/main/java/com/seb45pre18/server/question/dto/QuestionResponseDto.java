@@ -12,6 +12,7 @@ public class QuestionResponseDto {
     private String title;
     private String content;
     private String expect;
+    private String memberId;
     private Integer view;
     private Integer answer_count;
     private LocalDateTime createdAt;

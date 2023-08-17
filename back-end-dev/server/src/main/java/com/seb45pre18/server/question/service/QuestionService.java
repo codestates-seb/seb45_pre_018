@@ -1,5 +1,7 @@
 package com.seb45pre18.server.question.service;
 
+import com.seb45pre18.server.member.entity.MemberEntity;
+import com.seb45pre18.server.member.service.MemberService;
 import com.seb45pre18.server.question.entity.Question;
 import com.seb45pre18.server.question.repository.QuestionRepository;
 import org.springframework.data.domain.Page;
