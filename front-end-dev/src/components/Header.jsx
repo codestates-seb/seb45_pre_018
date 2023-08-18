@@ -2,6 +2,9 @@ import logo from "/logo-stackoverflow.png";
 
 import { styled } from "styled-components";
 import { Link } from "react-router-dom";
+import LoginBtn from './LoginBtn'
+import { useState } from "react";
+
 const Nav = styled.nav`
   position: sticky;
   top: 0;
@@ -54,23 +57,29 @@ const RightDiv = styled.div`
   justify-content: space-between;
 `;
 
-const Buttons = styled.button`
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  width: 80px;
-  height: 40px;
-  margin-left: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s;
 
-  background-color: ${(props) => props.backgroundcolor};
-  color: ${(props) => props.color};
 
-  &:hover {
-    background-color: ${(props) => props.hovercolor};
-  }
-`;
+
+
+
+  const userData = [
+    
+    
+    {
+    id:'1',
+    isLogin: false,
+    full_name:'jason',
+  email:'jason1@gmail.com',gender:'male',date_of_birth:'2022.03.03',
+  country_code:'',created_at:'',password:'123456'
+  },
+  {id:"2",full_name:'akiho',email:'sirasu@yahoo.com',gender:'female'
+  ,date_of_birth:'2022.04.04'
+  ,country_code:"81",created_at:'',password:'123456'}];
+
+  localStorage.setItem('user',JSON.stringify(userData));
+
+
+
 
 const Header = () => {
   return (
@@ -89,12 +98,8 @@ const Header = () => {
       <div></div>
 
       <RightDiv>
-        <Buttons color="#39739d" backgroundcolor="#E1ECF4" hovercolor="#A8C5E0">
-          Log in
-        </Buttons>
-        <Buttons color="#FFFFFF" backgroundcolor="#0A95FF" hovercolor="#0971CC">
-          Sign up
-        </Buttons>
+        <LoginBtn/>
+        
       </RightDiv>
     </Nav>
   );
