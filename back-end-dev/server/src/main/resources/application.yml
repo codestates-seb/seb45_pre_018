@@ -27,3 +27,11 @@ spring:
   database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
   open-in-view: false
   show-sql: true
+jwt:
+  key: lee
+  access-token-expiration-minutes: 30
+  refresh-token-expiration-minutes: 420
+
+memberId:
+  address:
+    admin: lee
