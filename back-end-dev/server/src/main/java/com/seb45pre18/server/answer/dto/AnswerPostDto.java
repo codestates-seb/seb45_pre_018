@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class AnswerPostDto {
-    private Long memberId;
+    private Long id;
     private Long questionId;
     private String content;
 

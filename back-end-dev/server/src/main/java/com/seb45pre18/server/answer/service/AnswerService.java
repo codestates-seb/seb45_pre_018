@@ -18,14 +18,11 @@ public class AnswerService {
         this.answerRepository = answerRepository;
     }
     // 회원이 질문글에 답변 생성
-    public Answer createAnswer(Long memberId, Long questionId, String content) {
-        Answer answer = new Answer();
-        answer.setMemberId(memberId);
-        answer.setQuestionId(questionId);
-        answer.setContent(content);
+    public Answer createAnswer(Answer answer) {
+        System.out.println(answer.getQuestion().getQuestionId());
+        System.out.println(answer.getMemberEntity().getId());
 
-        Answer savedAnswer = answerRepository.save(answer);
-        return savedAnswer;
+        return answerRepository.save(answer);
     }
 
 

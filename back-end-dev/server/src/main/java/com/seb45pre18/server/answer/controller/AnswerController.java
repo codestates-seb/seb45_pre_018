@@ -6,6 +6,7 @@ import com.seb45pre18.server.answer.dto.AnswerResponseDto;
 import com.seb45pre18.server.answer.entity.Answer;
 import com.seb45pre18.server.answer.mapper.AnswerMapper;
 import com.seb45pre18.server.answer.service.AnswerService;
+import com.seb45pre18.server.question.entity.Question;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @CrossOrigin
 public class AnswerController {
+//    private final static String ANSWER_DEFAULT_URL = "/answers";
     private final AnswerService answerService;
     private final AnswerMapper mapper;
 
@@ -29,22 +31,29 @@ public class AnswerController {
     public ResponseEntity postAnswer(@Valid @RequestBody AnswerPostDto requestBody){
 
 
-        Answer content = mapper.answerPostToAnswer(requestBody);
-        Answer response = answerService.createAnswer(requestBody.getMemberId(),requestBody.getQuestionId(), String.valueOf(content));
+        Answer answer = mapper.answerPostToAnswer(requestBody);
+        Answer savedAnswer = answerService.createAnswer(answer);
+        savedAnswer.setQuestionId(savedAnswer.getQuestion().getQuestionId());
+        savedAnswer.setId(savedAnswer.getMemberEntity().getId());
+
+        AnswerResponseDto responseDto = mapper.answerToAnswerResponse(savedAnswer);
 
        // URI location = UriCreator.createUri(ANSWER_DEFAULT_URL, answer.getAnswerId());
 
-        return new ResponseEntity<>(mapper.answerToAnswerResponse(response), HttpStatus.CREATED);
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
 
     }
 
     //질문글에 작성한 답변 내용 수정
-    @PatchMapping("/{answer-id}/edit")
+    @PatchMapping("/{answer-id}")
     public ResponseEntity patchAnswer(@PathVariable("answer-id") Long answerId,
                                       @RequestBody AnswerPatchDto requestBody) {
         requestBody.setAnswerId(answerId);
 
         Answer response = answerService.updateAnswer(mapper.answerPatchToAnswer(requestBody),answerId);
+
+        response.setQuestionId(response.getQuestion().getQuestionId());
+        response.setId(response.getMemberEntity().getId());
 
         return new ResponseEntity<>(mapper.answerToAnswerResponse(response), HttpStatus.OK);
     }
@@ -53,6 +62,8 @@ public class AnswerController {
     @GetMapping("/{answer-id}")
     public ResponseEntity getAnswer(@PathVariable("answer-id") Long answerId) {
         Answer response = answerService.findAnswer(answerId);
+        response.setQuestionId(response.getQuestion().getQuestionId());
+        response.setId(response.getMemberEntity().getId());
 
         return new ResponseEntity<>(mapper.answerToAnswerResponse(response), HttpStatus.OK);
     }
@@ -61,11 +72,15 @@ public class AnswerController {
     @GetMapping
     public ResponseEntity getAnswers() {
         List<Answer> answers = answerService.findAnswers();
-        List<AnswerResponseDto> response =
-                answers.stream()
-                        .map(answer -> mapper.answerToAnswerResponse(answer))
-                        .collect(Collectors.toList());
 
+        List<AnswerResponseDto> response = answers.stream()
+                .map(answer -> {
+                    AnswerResponseDto dto = mapper.answerToAnswerResponse(answer);
+                    dto.setQuestionId(answer.getQuestion().getQuestionId()); // QuestionId 설정
+                    dto.setId(answer.getMemberEntity().getId()); // memberId 설정
+                    return dto;
+                })
+                .collect(Collectors.toList());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

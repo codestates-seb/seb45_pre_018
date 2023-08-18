@@ -24,7 +24,7 @@ public class Answer extends BaseTime{
     @Column(nullable = false)
     private String content;
 
-    private Long memberId;
+    private Long Id;
     private Long questionId;
 
     // 회원과 답변 1:N관계 매핑
