@@ -138,14 +138,16 @@ const Question = () => {
   const onSubmitHandler = (e) => {
     e.preventDefault();
     const newId = uuidv4();
+    const seoulTime = new Date();
+    seoulTime.setHours(seoulTime.getHours() + 9);
     const newQuestion = {
       id: newId,
       title: titleCheck,
       detail: detailCheck,
       expect: expectCheck,
       tags: tagCheck,
-      createdAt: new Date().toISOString(),
-      modified: new Date().toISOString(),
+      createdAt: seoulTime.toISOString(),
+      modified: seoulTime.toISOString(),
       views: 0,
       answers: 0,
     };
@@ -153,7 +155,9 @@ const Question = () => {
     const questions = JSON.parse(localStorage.getItem("questions")) || [];
     questions.push(newQuestion);
     localStorage.setItem("questions", JSON.stringify(questions));
-
+    {
+      console.log(new Date().toISOString());
+    }
     navigate("/");
   };
 

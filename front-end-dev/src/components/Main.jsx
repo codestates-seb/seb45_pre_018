@@ -67,6 +67,9 @@ const TagSideDiv = styled.div`
 `;
 
 const Tags = styled.div`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   border: none;
   border-radius: 10px;
   background-color: #e1ecf4;
@@ -74,11 +77,24 @@ const Tags = styled.div`
   cursor: pointer;
   margin-bottom: 20px;
   font-size: 1rem;
+  max-width: 50%;
 
   &:hover {
     background-color: #a8c5e0;
   }
 `;
+
+const TagSideRight = styled.div`
+  display: flex;
+  justify-content: end;
+  align-items: center;
+`;
+
+const UserName = styled.div`
+  margin-right: 10px;
+  font-size: 1rem;
+`;
+
 const DateDiv = styled.div`
   display: flex;
   justify-content: end;
@@ -137,10 +153,13 @@ const Main = () => {
                 </TitleDiv>
                 <ContentsDiv> {question.detail}</ContentsDiv>
                 <TagSideDiv>
-                  <Tags>{question.tags}</Tags>
-                  <DateDiv>
-                    asked {detailDate(new Date(question.createdAt))}
-                  </DateDiv>
+                  {question.tags ? <Tags>{question.tags}</Tags> : <div></div>}
+                  <TagSideRight>
+                    <UserName>{question.id}</UserName>
+                    <DateDiv>
+                      asked {detailDate(new Date(question.createdAt))}
+                    </DateDiv>
+                  </TagSideRight>
                 </TagSideDiv>
               </SubDivRight>
             </MainDivRight>

@@ -42,12 +42,17 @@ const PTage = styled.div`
   margin-bottom: 20px;
 `;
 const Tags = styled.div`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   border: none;
   border-radius: 10px;
   background-color: #e1ecf4;
   padding: 10px;
   cursor: pointer;
   margin-bottom: 20px;
+  font-size: 1rem;
+  max-width: 50%;
 
   &:hover {
     background-color: #a8c5e0;
@@ -56,6 +61,19 @@ const Tags = styled.div`
 
 const Container = styled.div`
   display: flex;
+`;
+const LeftContainer = styled.div`
+  display: flex;
+  width: 80%;
+`;
+const RightContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: #e1ecf4;
+  padding: 10px;
+  border-radius: 10px;
 `;
 const Btns = styled.button`
   background-color: white;
@@ -171,9 +189,6 @@ const QuestionDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewCount, setViewCount] = useState(selectedQuestion.views);
 
-  const day = selectedQuestion.createdAt;
-  const modifiedDay = selectedQuestion.modified;
-
   useEffect(() => {
     const updatedViewCount = viewCount + 1;
     setViewCount(updatedViewCount);
@@ -203,6 +218,7 @@ const QuestionDetail = () => {
           title: editedTitle,
           expect: editedExpect,
           detail: editedDetail,
+          createdAt: new Date().toISOString(),
           modified: new Date().toISOString(),
         };
       }
@@ -273,11 +289,11 @@ const QuestionDetail = () => {
         <TopSubDiv>
           <DateDiv>
             <Span>Asked </Span>
-            {detailDate(new Date(day))}
+            {detailDate(new Date(selectedQuestion.createdAt))}
           </DateDiv>
           <DateDiv>
             <Span>Modified </Span>
-            {detailDate(new Date(modifiedDay))}
+            {detailDate(new Date(selectedQuestion.modified))}
           </DateDiv>
           <DateDiv>
             <Span>Viewed </Span>
@@ -335,27 +351,34 @@ const QuestionDetail = () => {
           {selectedQuestion.tags && <Tags>{selectedQuestion.tags}</Tags>}
         </Container>
         <Container>
-          <Btns onClick={handleOpenModal}>Share</Btns>
-          {isEditing ? (
-            <>
-              <Btns
-                onClick={handleSaveClick}
-                disabled={
-                  editedTitle.length <= 15 ||
-                  editedDetail === editedExpect ||
-                  editedDetail.length <= 20 ||
-                  editedExpect.length <= 20
-                }
-              >
-                Save
-              </Btns>
-              <Btns onClick={handleCancelClick}>Cancel</Btns>
-            </>
-          ) : (
-            <Btns onClick={handleEditClick}>Edit</Btns>
-          )}
-          <Btns onClick={handleDeleteClick}>Delete</Btns>
+          <LeftContainer>
+            <Btns onClick={handleOpenModal}>Share</Btns>
+            {isEditing ? (
+              <>
+                <Btns
+                  onClick={handleSaveClick}
+                  disabled={
+                    editedTitle.length <= 15 ||
+                    editedDetail === editedExpect ||
+                    editedDetail.length <= 20 ||
+                    editedExpect.length <= 20
+                  }
+                >
+                  Save
+                </Btns>
+                <Btns onClick={handleCancelClick}>Cancel</Btns>
+              </>
+            ) : (
+              <Btns onClick={handleEditClick}>Edit</Btns>
+            )}
+            <Btns onClick={handleDeleteClick}>Delete</Btns>
+          </LeftContainer>
+          <RightContainer>
+            <div>asked {selectedQuestion.createdAt.slice(0, 10)}</div>
+            <div>{selectedQuestion.id}</div>
+          </RightContainer>
         </Container>
+
         {isModalOpen && (
           <Bubble>
             <p>Share a link to this question (Includes your user id)</p>
