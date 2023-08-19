@@ -11,6 +11,7 @@ const Nav = styled.nav`
   padding: 5px;
   background-color: white;
   z-index: 100;
+  border-bottom: 1px solid #ccc;
 `;
 
 const Logoimg = styled.img`
@@ -71,6 +72,17 @@ const Buttons = styled.button`
     background-color: ${(props) => props.hovercolor};
   }
 `;
+const StyledLink = styled(Link)`
+  font-weight: bold;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #4f4f4f;
+  &:hover {
+    color: black;
+  }
+`;
 
 const Header = () => {
   return (
@@ -81,9 +93,15 @@ const Header = () => {
         </div>
       </Link>
       <Left>
-        <LeftDiv>About</LeftDiv>
-        <LeftDiv>Products</LeftDiv>
-        <LeftDiv>For Teams</LeftDiv>
+        <StyledLink to="/about">
+          <LeftDiv>About</LeftDiv>
+        </StyledLink>
+        <StyledLink to="/product">
+          <LeftDiv>Products</LeftDiv>
+        </StyledLink>
+        <StyledLink to="/forTeam">
+          <LeftDiv>For Teams</LeftDiv>
+        </StyledLink>
       </Left>
 
       <div></div>

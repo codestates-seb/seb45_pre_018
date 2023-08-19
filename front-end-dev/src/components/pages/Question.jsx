@@ -133,6 +133,8 @@ const Question = () => {
     setTagCheck(event.target.value);
   };
 
+  // 클릭 핸들러를 통해 isReviewing 상태를 변경하는 함수
+
   const onSubmitHandler = (e) => {
     e.preventDefault();
     const newId = uuidv4();
@@ -143,6 +145,7 @@ const Question = () => {
       expect: expectCheck,
       tags: tagCheck,
       createdAt: new Date().toISOString(),
+      modified: new Date().toISOString(),
       views: 0,
       answers: 0,
     };
@@ -150,11 +153,6 @@ const Question = () => {
     const questions = JSON.parse(localStorage.getItem("questions")) || [];
     questions.push(newQuestion);
     localStorage.setItem("questions", JSON.stringify(questions));
-
-    setTitleCheck("");
-    setDetailCheck("");
-    setExpectCheck("");
-    setTagCheck("");
 
     navigate("/");
   };
@@ -167,6 +165,7 @@ const Question = () => {
     <QuestionContainer>
       <form onSubmit={onSubmitHandler}>
         <H1Tag>Ask a public question</H1Tag>
+
         <HowToWrite>
           <h2>Writing a good question</h2>
           <p>
@@ -189,6 +188,7 @@ const Question = () => {
             <li>Review your question and post it to the site.</li>
           </UlTag>
         </HowToWrite>
+
         <WriteTitle>
           <h3>Title</h3>
           <TitleLengthCheckDive>
@@ -207,64 +207,102 @@ const Question = () => {
             isstep={currentStep >= 1}
             onChange={titleHandler}
           />
+
+          <>
+            {titleCheck.length <= 15 && (
+              <ToolongText>
+                <li>Title must be at least 15 characters.</li>
+              </ToolongText>
+            )}
+          </>
+
           {currentStep === 1 && (
-            <NextBtn onClick={handleNextClick} textLength={20}>
+            <NextBtn
+              onClick={handleNextClick}
+              textLength={titleCheck.length > 15}
+              disabled={titleCheck.length <= 15}
+            >
               Next
             </NextBtn>
           )}
         </WriteTitle>
 
-        <WriteForm isstep={currentStep >= 2} disabled={currentStep < 2}>
-          <LabelTag isstep={currentStep >= 2}>
-            <b>What are the details of your problem?</b>
-            <p>
-              Introduce the problem and expand on what you put in the title.
-              Minimum 20 characters.
-            </p>
-          </LabelTag>
-          <TextArea
-            value={detailCheck}
-            minLength={20}
-            isstep={currentStep >= 2}
-            disabled={currentStep < 2}
-            onChange={detailHandler}
-          />
-          {currentStep === 2 && (
-            <NextBtn
-              onClick={handleNextClick}
-              disabled={detailCheck.length <= 20}
-              textLength={detailCheck.length > 20}
-            >
-              Next
-            </NextBtn>
-          )}
-        </WriteForm>
+        <>
+          <WriteForm isstep={currentStep >= 2} disabled={currentStep < 2}>
+            <LabelTag isstep={currentStep >= 2}>
+              <b>What are the details of your problem?</b>
+              <p>
+                Introduce the problem and expand on what you put in the title.
+                Minimum 20 characters.
+              </p>
+            </LabelTag>
 
-        <WriteForm isstep={currentStep >= 3} disabled={currentStep < 3}>
-          <LabelTag isstep={currentStep >= 3}>
-            <b>What did you try and what were you expecting?</b>
-            <p>
-              Describe what you tried, what you expected to happen, and what
-              actually resulted. Minimum 20 characters.
-            </p>
-          </LabelTag>
-          <TextArea
-            value={expectCheck}
-            minLength={20}
-            isstep={currentStep >= 3}
-            disabled={currentStep < 3}
-            onChange={expectHandler}
-          />
-          {currentStep === 3 && (
-            <NextBtn
-              onClick={handleNextClick}
-              disabled={expectCheck.length <= 20}
-              textLength={expectCheck.length > 20}
-            >
-              Next
-            </NextBtn>
-          )}
-        </WriteForm>
+            <TextArea
+              value={detailCheck}
+              minLength={20}
+              isstep={currentStep >= 2 ? "true" : "false"}
+              disabled={currentStep < 2}
+              onChange={detailHandler}
+            />
+
+            {detailCheck !== expectCheck || detailCheck.length === 0 ? (
+              <>
+                {currentStep === 2 && (
+                  <NextBtn
+                    onClick={handleNextClick}
+                    disabled={detailCheck.length <= 20}
+                    textLength={detailCheck.length > 20}
+                  >
+                    Next
+                  </NextBtn>
+                )}
+              </>
+            ) : (
+              detailCheck.length !== 0 && (
+                <ToolongText>
+                  Problem details and expected results must be different.
+                </ToolongText>
+              )
+            )}
+          </WriteForm>
+
+          <WriteForm isstep={currentStep >= 3} disabled={currentStep < 3}>
+            <LabelTag isstep={currentStep >= 3}>
+              <b>What did you try and what were you expecting?</b>
+              <p>
+                Describe what you tried, what you expected to happen, and what
+                actually resulted. Minimum 20 characters.
+              </p>
+            </LabelTag>
+            <TextArea
+              value={expectCheck}
+              minLength={20}
+              isstep={currentStep >= 3}
+              disabled={currentStep < 3}
+              onChange={expectHandler}
+            />
+
+            {detailCheck !== expectCheck ? (
+              <>
+                {currentStep === 3 && (
+                  <NextBtn
+                    onClick={handleNextClick}
+                    disabled={expectCheck.length <= 20}
+                    textLength={expectCheck.length > 20}
+                  >
+                    Next
+                  </NextBtn>
+                )}
+              </>
+            ) : (
+              expectCheck.length !== 0 && (
+                <ToolongText>
+                  Problem details and expected results must be different.
+                </ToolongText>
+              )
+            )}
+          </WriteForm>
+        </>
 
         <WriteForm isstep={currentStep >= 4} disabled={currentStep < 4}>
           <LabelTag isstep={currentStep >= 4}>
@@ -284,9 +322,9 @@ const Question = () => {
           ></InputTag>
           {currentStep === 4 && (
             <NextBtn
-              type="submit"
-              textLength={titleCheck.length !== 0 && 20}
-              disabled={titleCheck.length < 1}
+              // type="submit"
+              textLength={titleCheck.length > 15 && detailCheck !== expectCheck}
+              disabled={titleCheck.length <= 15 || detailCheck === expectCheck}
             >
               Review your question
             </NextBtn>
