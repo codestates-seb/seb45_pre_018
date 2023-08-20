@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { styled } from "styled-components";
 import AskBtn from "../AskBtn";
+import Comment from "../Answer";
 
 const MainContainer = styled.div`
   display: flex;
@@ -75,6 +76,7 @@ const QuestionDetail = () => {
         <PTage>{selectedQuestion.detail}</PTage>
         <PTage>{selectedQuestion.expect}</PTage>
       </Mainwrapper>
+      <Comment/>
     </MainContainer>
   );
 };
