@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 20px;
   width: 1300px;
   height: 2000px;
 `;
@@ -14,30 +13,33 @@ const TopDiv = styled.div`
   display: flex;
   justify-content: space-between;
   font-size: 2rem;
-  margin: 0 0 50px 20px;
+  margin: 40px;
+  height: 5%;
 `;
 
 const Mainwrapper = styled.div`
   display: flex;
-  margin: 30px;
+
+  border-top: 1px solid #ccc;
 `;
 
 const MainDivLeft = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 0px 30px;
+  font-size: 1.2rem;
+  margin: 20px;
 `;
 const SubDivLeft = styled.div`
   margin-bottom: 10px;
 `;
 const MainDivRight = styled.div`
   font-size: 1.5rem;
+  margin: 20px;
 `;
 
 const SubDivRight = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
   max-width: 1100px;
 `;
 
@@ -57,6 +59,42 @@ const ContentsDiv = styled.p`
   -webkit-line-clamp: 2;
   overflow: hidden;
 `;
+
+const TagSideDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+`;
+
+const Tags = styled.div`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: none;
+  border-radius: 10px;
+  background-color: #e1ecf4;
+  padding: 10px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  max-width: 50%;
+
+  &:hover {
+    background-color: #a8c5e0;
+  }
+`;
+
+const TagSideRight = styled.div`
+  display: flex;
+  justify-content: end;
+  align-items: center;
+`;
+
+const UserName = styled.div`
+  margin-right: 10px;
+  font-size: 1rem;
+`;
+
 const DateDiv = styled.div`
   display: flex;
   justify-content: end;
@@ -114,9 +152,15 @@ const Main = () => {
                   <StyledLink to={question.id}>{question.title} </StyledLink>
                 </TitleDiv>
                 <ContentsDiv> {question.detail}</ContentsDiv>
-                <DateDiv>
-                  asked {detailDate(new Date(question.createdAt))}
-                </DateDiv>
+                <TagSideDiv>
+                  {question.tags ? <Tags>{question.tags}</Tags> : <div></div>}
+                  <TagSideRight>
+                    <UserName>{question.id}</UserName>
+                    <DateDiv>
+                      asked {detailDate(new Date(question.createdAt))}
+                    </DateDiv>
+                  </TagSideRight>
+                </TagSideDiv>
               </SubDivRight>
             </MainDivRight>
           </Mainwrapper>
