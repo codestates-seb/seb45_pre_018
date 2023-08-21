@@ -3,7 +3,7 @@ import logo from "/logo-stackoverflow.png";
 import { styled } from "styled-components";
 import { Link } from "react-router-dom";
 import LoginBtn from './LoginBtn'
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 const Nav = styled.nav`
   position: sticky;
@@ -14,6 +14,7 @@ const Nav = styled.nav`
   padding: 5px;
   background-color: white;
   z-index: 100;
+  border-bottom: 1px solid #ccc;
 `;
 
 const Logoimg = styled.img`
@@ -57,31 +58,67 @@ const RightDiv = styled.div`
   justify-content: space-between;
 `;
 
+const Buttons = styled.button`
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  width: 80px;
+  height: 40px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 
+  background-color: ${(props) => props.backgroundcolor};
+  color: ${(props) => props.color};
 
+  &:hover {
+    background-color: ${(props) => props.hovercolor};
+  }
+`;
 
-
-
-  const userData = [
-    
-    
-    {
-    id:'1',
+const userData = [
+  {
+    id: "1",
     isLogin: false,
-    full_name:'jason',
-  email:'jason1@gmail.com',gender:'male',date_of_birth:'2022.03.03',
-  country_code:'',created_at:'',password:'123456'
+    full_name: "jason",
+    email: "1",
+    gender: "male",
+    date_of_birth: "2022.03.03",
+    country_code: "",
+    created_at: "",
+    password: "1",
   },
-  {id:"2",full_name:'akiho',email:'sirasu@yahoo.com',gender:'female'
-  ,date_of_birth:'2022.04.04'
-  ,country_code:"81",created_at:'',password:'123456'}];
-
-  localStorage.setItem('user',JSON.stringify(userData));
-
-
+  {
+    id: "2",
+    full_name: "akiho",
+    email: "sirasu@yahoo.com",
+    gender: "female",
+    date_of_birth: "2022.04.04",
+    country_code: "81",
+    created_at: "",
+    password: "123456",
+  },
+];
+localStorage.setItem("user", JSON.stringify(userData));
 
 
 const Header = () => {
+  const [islogin, setislogin] = useState(false);
+
+  const getData = JSON.parse(localStorage.getItem("login"));
+  console.log(getData);
+  useEffect(() => {
+    if (getData === "good") {
+      setislogin(true);
+    } else {
+      setislogin(false);
+    }
+  }, [getData]);
+  const logoutHandler = () => {
+    setislogin(false);
+    localStorage.setItem("login", JSON.stringify(""));
+    alert("로그아웃");
+  };
   return (
     <Nav>
       <Link to="/">
@@ -90,15 +127,32 @@ const Header = () => {
         </div>
       </Link>
       <Left>
-        <LeftDiv>About</LeftDiv>
-        <LeftDiv>Products</LeftDiv>
-        <LeftDiv>For Teams</LeftDiv>
+        <StyledLink to="/about">
+          <LeftDiv>About</LeftDiv>
+        </StyledLink>
+        <StyledLink to="/product">
+          <LeftDiv>Products</LeftDiv>
+        </StyledLink>
+        <StyledLink to="/forTeam">
+          <LeftDiv>For Teams</LeftDiv>
+        </StyledLink>
       </Left>
 
       <div></div>
 
       <RightDiv>
-        <LoginBtn/>
+      {islogin ? (
+          <Buttons
+            color="#39739d"
+            backgroundColor="#E1ECF4"
+            hoverColor="#A8C5E0"
+            onClick={logoutHandler}
+          >
+            Log out
+          </Buttons>
+        ) : (
+          <LoginBtn />
+        )}
         
       </RightDiv>
     </Nav>
