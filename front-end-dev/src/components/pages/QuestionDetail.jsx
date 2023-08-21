@@ -1,9 +1,9 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { styled } from "styled-components";
-import AskBtn from "../AskBtn";
-import { useEffect, useState } from "react";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import Comment from "../Answer";
+import { useParams, useNavigate } from 'react-router-dom'
+import { styled } from 'styled-components'
+import AskBtn from '../AskBtn'
+import { useEffect, useState } from 'react'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+import Comment from '../Answer'
 
 const MainContainer = styled.div`
   display: flex;
@@ -11,38 +11,39 @@ const MainContainer = styled.div`
   margin: 20px;
   width: 1300px;
   height: 2000px;
-`;
+`
 
 const TopDiv = styled.div`
   display: flex;
   justify-content: space-between;
   font-size: 2rem;
   margin-left: 20px;
-`;
+  height: 7%;
+`
 
 const TopSubDiv = styled.div`
   display: flex;
   margin-left: 23px;
-`;
+`
 
 const DateDiv = styled.div`
   margin-right: 20px;
-`;
+`
 
 const Span = styled.span`
   margin-right: 5px;
   color: gray;
-`;
+`
 
 const Mainwrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin: 20px;
-`;
+`
 
 const PTage = styled.div`
   margin-bottom: 20px;
-`;
+`
 const Tags = styled.div`
   white-space: nowrap;
   overflow: hidden;
@@ -59,15 +60,15 @@ const Tags = styled.div`
   &:hover {
     background-color: #a8c5e0;
   }
-`;
+`
 
 const Container = styled.div`
   display: flex;
-`;
+`
 const LeftContainer = styled.div`
   display: flex;
   width: 80%;
-`;
+`
 const RightContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -76,7 +77,7 @@ const RightContainer = styled.div`
   background-color: #e1ecf4;
   padding: 10px;
   border-radius: 10px;
-`;
+`
 const Btns = styled.button`
   background-color: white;
   color: gray;
@@ -89,14 +90,14 @@ const Btns = styled.button`
   &:hover {
     background-color: #a8c5e0;
   }
-`;
+`
 
 const WriteTitle = styled.div`
   margin-bottom: 16px;
   font-size: 1.5rem;
   font-weight: bold;
   width: 100%;
-`;
+`
 
 const InputTag = styled.input`
   width: 70%;
@@ -105,7 +106,7 @@ const InputTag = styled.input`
   margin-top: 10px;
   border: 2px solid whitesmoke;
   padding: 10px;
-`;
+`
 
 const TextArea = styled.textarea`
   padding: 10px;
@@ -115,7 +116,7 @@ const TextArea = styled.textarea`
   width: 70%;
   min-height: 200px;
   resize: vertical;
-`;
+`
 
 const Bubble = styled.div`
   position: relative;
@@ -127,7 +128,7 @@ const Bubble = styled.div`
   border: 3px solid #bebebe;
 
   &:after {
-    content: "";
+    content: '';
     position: absolute;
     border-style: solid;
     border-width: 0 15px 15px;
@@ -138,7 +139,7 @@ const Bubble = styled.div`
     top: -15px;
     left: 10px;
   }
-`;
+`
 
 const ShareBtns = styled.button`
   background-color: white;
@@ -151,68 +152,66 @@ const ShareBtns = styled.button`
   &:hover {
     color: #2a47ff;
   }
-`;
+`
 
 const WarningDiv = styled.li`
   font-size: 1rem;
   color: red;
-`;
+`
 
 const detailDate = (a) => {
-  const milliSeconds = new Date() - a;
-  const seconds = milliSeconds / 1000;
-  if (seconds < 60) return `방금 전`;
-  const minutes = seconds / 60;
-  if (minutes < 60) return `${Math.floor(minutes)}분 전`;
-  const hours = minutes / 60;
-  if (hours < 24) return `${Math.floor(hours)}시간 전`;
-  const days = hours / 24;
-  if (days < 7) return `${Math.floor(days)}일 전`;
-  const weeks = days / 7;
-  if (weeks < 5) return `${Math.floor(weeks)}주 전`;
-  const months = days / 30;
-  if (months < 12) return `${Math.floor(months)}개월 전`;
-  const years = days / 365;
-  return `${Math.floor(years)}년 전`;
-};
+  const milliSeconds = new Date() - a
+  const seconds = milliSeconds / 1000
+  if (seconds < 60) return `방금 전`
+  const minutes = seconds / 60
+  if (minutes < 60) return `${Math.floor(minutes)}분 전`
+  const hours = minutes / 60
+  if (hours < 24) return `${Math.floor(hours)}시간 전`
+  const days = hours / 24
+  if (days < 7) return `${Math.floor(days)}일 전`
+  const weeks = days / 7
+  if (weeks < 5) return `${Math.floor(weeks)}주 전`
+  const months = days / 30
+  if (months < 12) return `${Math.floor(months)}개월 전`
+  const years = days / 365
+  return `${Math.floor(years)}년 전`
+}
 
 const QuestionDetail = () => {
-  const { idx } = useParams();
-  const navigate = useNavigate();
+  const { idx } = useParams()
+  const navigate = useNavigate()
 
-  const questions = JSON.parse(localStorage.getItem("questions")) || [];
-  const selectedQuestion = questions.find((question) => question.id === idx);
+  const questions = JSON.parse(localStorage.getItem('questions')) || []
+  const selectedQuestion = questions.find((question) => question.id === idx)
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedTitle, setEditedTitle] = useState(selectedQuestion.title);
-  const [editedExpect, setEditedExpect] = useState(selectedQuestion.expect);
-  const [editedDetail, setEditedDetail] = useState(selectedQuestion.detail);
-  const [isCopied, setIsCopied] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [viewCount, setViewCount] = useState(selectedQuestion.views);
+  const [isEditing, setIsEditing] = useState(false)
+  const [editedTitle, setEditedTitle] = useState(selectedQuestion.title)
+  const [editedExpect, setEditedExpect] = useState(selectedQuestion.expect)
+  const [editedDetail, setEditedDetail] = useState(selectedQuestion.detail)
+  const [isCopied, setIsCopied] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [viewCount, setViewCount] = useState(selectedQuestion.views)
 
   useEffect(() => {
-    const updatedViewCount = viewCount + 1;
-    setViewCount(updatedViewCount);
-    selectedQuestion.views = updatedViewCount;
-    localStorage.setItem("questions", JSON.stringify(questions));
-  }, []);
+    const updatedViewCount = viewCount + 1
+    setViewCount(updatedViewCount)
+    selectedQuestion.views = updatedViewCount
+    localStorage.setItem('questions', JSON.stringify(questions))
+  }, [])
 
   const handleDeleteClick = () => {
-    const deletedQuestions = questions.filter(
-      (question) => question.id !== idx
-    );
-    localStorage.setItem("questions", JSON.stringify(deletedQuestions));
+    const deletedQuestions = questions.filter((question) => question.id !== idx)
+    localStorage.setItem('questions', JSON.stringify(deletedQuestions))
 
-    navigate("/");
-  };
+    navigate('/')
+  }
 
   const handleEditClick = () => {
-    setIsEditing(true);
-  };
+    setIsEditing(true)
+  }
 
   const handleSaveClick = () => {
-    setIsEditing(false);
+    setIsEditing(false)
     const updatedQuestions = questions.map((question) => {
       if (question.id === idx) {
         return {
@@ -222,46 +221,46 @@ const QuestionDetail = () => {
           detail: editedDetail,
           createdAt: new Date().toISOString(),
           modified: new Date().toISOString(),
-        };
+        }
       }
-      return question;
-    });
-    localStorage.setItem("questions", JSON.stringify(updatedQuestions));
-  };
+      return question
+    })
+    localStorage.setItem('questions', JSON.stringify(updatedQuestions))
+  }
 
   const handleCancelClick = () => {
-    setEditedTitle(selectedQuestion.title);
-    setEditedExpect(selectedQuestion.expect);
-    setEditedDetail(selectedQuestion.detail);
-    setIsEditing(false);
-  };
+    setEditedTitle(selectedQuestion.title)
+    setEditedExpect(selectedQuestion.expect)
+    setEditedDetail(selectedQuestion.detail)
+    setIsEditing(false)
+  }
 
   const handleTitleChange = (e) => {
-    setEditedTitle(e.target.value);
-  };
+    setEditedTitle(e.target.value)
+  }
 
   const handleExpectChange = (e) => {
-    setEditedExpect(e.target.value);
-  };
+    setEditedExpect(e.target.value)
+  }
 
   const handleDetailChange = (e) => {
-    setEditedDetail(e.target.value);
-  };
+    setEditedDetail(e.target.value)
+  }
 
   const handleCopyClick = () => {
-    setIsCopied(true);
+    setIsCopied(true)
     setTimeout(() => {
-      setIsCopied(false);
-    }, 1500);
-  };
+      setIsCopied(false)
+    }, 1500)
+  }
 
   const handleOpenModal = () => {
-    setIsModalOpen((prev) => !prev);
-  };
+    setIsModalOpen((prev) => !prev)
+  }
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+    setIsModalOpen(false)
+  }
 
   return (
     <MainContainer>
@@ -269,11 +268,7 @@ const QuestionDetail = () => {
         {isEditing ? (
           <WriteTitle>
             <p>Title</p>
-            <InputTag
-              type="text"
-              value={editedTitle}
-              onChange={handleTitleChange}
-            />
+            <InputTag type="text" value={editedTitle} onChange={handleTitleChange} />
             {editedTitle.length <= 15 && (
               <WarningDiv>
                 <li>Title must be at least 15 characters.</li>
@@ -310,13 +305,7 @@ const QuestionDetail = () => {
             <WriteTitle>
               <p>Detail</p>
               <TextArea value={editedDetail} onChange={handleDetailChange} />
-              {editedDetail !== editedExpect || editedDetail.length === 0 ? (
-                ""
-              ) : (
-                <WarningDiv>
-                  Problem details and expected results must be different.
-                </WarningDiv>
-              )}
+              {editedDetail !== editedExpect || editedDetail.length === 0 ? '' : <WarningDiv>Problem details and expected results must be different.</WarningDiv>}
               {editedDetail.length < 20 && (
                 <>
                   <WarningDiv> Minimum 20 characters.</WarningDiv>
@@ -332,13 +321,7 @@ const QuestionDetail = () => {
             <WriteTitle>
               <p>Expect</p>
               <TextArea value={editedExpect} onChange={handleExpectChange} />
-              {editedDetail !== editedExpect || editedExpect.length === 0 ? (
-                ""
-              ) : (
-                <WarningDiv>
-                  Problem details and expected results must be different.
-                </WarningDiv>
-              )}
+              {editedDetail !== editedExpect || editedExpect.length === 0 ? '' : <WarningDiv>Problem details and expected results must be different.</WarningDiv>}
               {editedExpect.length < 20 && (
                 <>
                   <WarningDiv> Minimum 20 characters.</WarningDiv>
@@ -349,23 +332,13 @@ const QuestionDetail = () => {
             editedExpect
           )}
         </PTage>
-        <Container>
-          {selectedQuestion.tags && <Tags>{selectedQuestion.tags}</Tags>}
-        </Container>
+        <Container>{selectedQuestion.tags && <Tags>{selectedQuestion.tags}</Tags>}</Container>
         <Container>
           <LeftContainer>
             <Btns onClick={handleOpenModal}>Share</Btns>
             {isEditing ? (
               <>
-                <Btns
-                  onClick={handleSaveClick}
-                  disabled={
-                    editedTitle.length <= 15 ||
-                    editedDetail === editedExpect ||
-                    editedDetail.length <= 20 ||
-                    editedExpect.length <= 20
-                  }
-                >
+                <Btns onClick={handleSaveClick} disabled={editedTitle.length <= 15 || editedDetail === editedExpect || editedDetail.length <= 20 || editedExpect.length <= 20}>
                   Save
                 </Btns>
                 <Btns onClick={handleCancelClick}>Cancel</Btns>
@@ -387,18 +360,16 @@ const QuestionDetail = () => {
             <InputTag value={window.location.href} readOnly />
             <div>
               <CopyToClipboard text={window.location.href}>
-                <ShareBtns onClick={handleCopyClick}>
-                  {isCopied ? "Copied!" : "Copy link"}
-                </ShareBtns>
+                <ShareBtns onClick={handleCopyClick}>{isCopied ? 'Copied!' : 'Copy link'}</ShareBtns>
               </CopyToClipboard>
               <ShareBtns onClick={handleCloseModal}>Close</ShareBtns>
             </div>
           </Bubble>
         )}
       </Mainwrapper>
-      <Comment/>
+      <Comment selectedQuestion={selectedQuestion} />
     </MainContainer>
-  );
-};
+  )
+}
 
-export default QuestionDetail;
+export default QuestionDetail
