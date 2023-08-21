@@ -1,6 +1,5 @@
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
 const AskedBtn = styled.button`
   display: flex;
   justify-content: center;
@@ -19,18 +18,13 @@ const AskedBtn = styled.button`
     background-color: #0971cc;
   }
 `;
-const AskBtn = ({ setIsClicked }) => {
+const AskBtn = () => {
   const navigate = useNavigate();
 
   const navigateHandler = () => {
     navigate("/question");
-    setIsClicked(true);
   };
   return <AskedBtn onClick={navigateHandler}>Ask Question</AskedBtn>;
-};
-
-AskBtn.propTypes = {
-  setIsClicked: PropTypes.func.isRequired,
 };
 
 export default AskBtn;

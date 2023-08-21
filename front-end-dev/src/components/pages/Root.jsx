@@ -1,32 +1,27 @@
 import Header from "../Header";
-import Side_bar from "../Side_bar";
-import Main from "../Main";
+import Sidebar from "../Sidebar";
+import Footer from "../Footer";
+import Scroll from "../Scroll";
 import { styled } from "styled-components";
-import { useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+
 const Body = styled.div`
   display: flex;
-  height: 3000px;
+  justify-content: center;
 `;
 
 const Root = () => {
-  const [isClicked, setIsClicked] = useState(false);
+  const location = useLocation();
+  const hideSidebar = location.pathname.includes("/question");
   return (
     <>
-      <div style={{ width: "100%" }}>
-        <div style={{ width: "1500px" }}>
-          <Header setIsClicked={setIsClicked} />
-          <Body>
-            {isClicked ? (
-              "hi"
-            ) : (
-              <>
-                <Side_bar />
-                <Main setIsClicked={setIsClicked} />
-              </>
-            )}
-          </Body>
-        </div>
-      </div>
+      <Header />
+      <Scroll />
+      <Body>
+        {!hideSidebar && <Sidebar />}
+        <Outlet />
+      </Body>
+      <Footer />
     </>
   );
 };
