@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 20px;
+  margin: 20px 0 20px 0;
   width: 1300px;
   height: 2000px;
 `
@@ -14,13 +14,12 @@ const TopDiv = styled.div`
   display: flex;
   justify-content: space-between;
   font-size: 2rem;
-  margin-left: 20px;
-  height: 7%;
+  margin: 0 40px;
+  height: 5%;
 `
 
 const Mainwrapper = styled.div`
   display: flex;
-
   border-top: 1px solid #ccc;
 `
 
@@ -28,7 +27,7 @@ const MainDivLeft = styled.div`
   display: flex;
   flex-direction: column;
   font-size: 1.2rem;
-  margin: 20px;
+  margin: 20px 20px 20px 40px;
 `
 const SubDivLeft = styled.div`
   margin-bottom: 10px;
@@ -144,7 +143,7 @@ const Main = () => {
           <Mainwrapper key={index}>
             <MainDivLeft>
               <SubDivLeft>0 votes</SubDivLeft>
-              <SubDivLeft>{question.answers} answers</SubDivLeft>
+              <SubDivLeft>{question.answers.length} answers</SubDivLeft>
               <SubDivLeft>{question.views} views</SubDivLeft>
             </MainDivLeft>
             <MainDivRight>

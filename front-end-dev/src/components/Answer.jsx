@@ -1,28 +1,36 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { styled } from 'styled-components'
 
 const AnswerContainer = styled.div`
-  margin-top: 20px;
+  margin: 20px 0 20px 0;
+  width: 1300px;
 `
 
 const AnswerForm = styled.form`
   display: flex;
   padding: 10px;
   flex-direction: column;
-  margin-bottom: 10px;
+  margin: 20px 0;
+  border-top: 1px solid #ddd;
 `
 
 const AnswerInput = styled.textarea`
-  padding: 40px;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   resize: vertical;
+  margin-top: 20px;
+  min-height: 300px;
+  margin: 0 40px;
+  width: 85%;
 `
 
 const AnswerButton = styled.button`
   margin-top: 20px;
   align-self: flex-start;
   padding: 8px 16px;
+  margin: 40px;
   background-color: #0077cc;
   color: white;
   border: none;
@@ -33,98 +41,164 @@ const AnswerButton = styled.button`
   }
 `
 
-const AnswerList = styled.ul`
-  list-style: none;
-  padding: 10;
-  margin-bottom: 30px;
-`
-
-const AnswerItem = styled.li`
-  border: 1px solid #ddd;
+const AnswerItem = styled.div`
+  border-top: 1px solid #ddd;
   border-radius: 4px;
   padding: 10px;
-  margin-top: 10px;
+  margin: 10px 0 20px 0;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+`
+
+const AnswerDiv = styled.div`
+  display: flex;
+  max-width: 800px;
+  min-height: 300px;
+  margin-left: 40px;
+  padding: 10px;
+`
+const BtnContaniner = styled.div`
+  margin: 40px;
 `
 
 const AnswerDeleteButton = styled.button`
-  background-color: none;
   color: grey;
   border: none;
   border-radius: 4px;
-  padding: 4px 8px;
+  padding: 10px;
   margin-right: 8px;
   cursor: pointer;
+  background-color: white;
+  &:hover {
+    color: black;
+  }
 `
 
 const AnswerEditButton = styled.button`
   color: grey;
   border: none;
   border-radius: 4px;
-  padding: 4px 8px;
+  padding: 10px;
+  margin-right: 10px;
   cursor: pointer;
+  background-color: white;
+  &:hover {
+    color: black;
+  }
+`
+
+const H2Tag = styled.h2`
+  margin: 20px 20px 20px 40px;
+`
+const H3Tag = styled.h3`
+  margin: 20px 20px 20px 40px;
 `
 
 const Answer = () => {
-  const [answers, setAnswers] = useState([])
-  const [answer, setAnswer] = useState('')
+  const [answer, setAnswer] = useState()
   const [editingIndex, setEditingIndex] = useState(-1)
   const [editValue, setEditValue] = useState('')
 
-  useEffect(() => {
-    const savedAnswers = JSON.parse(localStorage.getItem('answers')) || []
-    setAnswers(savedAnswers)
-  }, [])
+  const { idx } = useParams()
+  const navigate = useNavigate()
+  const answerrr = JSON.parse(localStorage.getItem('questions')) || []
 
-  useEffect(() => {
-    localStorage.setItem('answers', JSON.stringify(answers))
-  }, [answers])
-
+  const selectedAnswer = answerrr.find((answer) => answer.id === idx) || { answers: [] }
+  const answersArray = Array.isArray(selectedAnswer.answers) ? selectedAnswer.answers : [selectedAnswer.answers]
   const handleAnswerSubmit = (e) => {
     e.preventDefault()
-    if (editingIndex !== -1) {
-      // If editing, update the answer
-      const newAnswers = [...answers]
-      newAnswers[editingIndex] = editValue
-      setAnswers(newAnswers)
-      setEditingIndex(-1)
-      setEditValue('')
-    } else {
-      // If not editing, add a new answer
-      setAnswers([...answers, answer])
-      setAnswer('')
-    }
+
+    const updatedQuestions = answerrr.map((question) => {
+      if (question.id === idx) {
+        return {
+          ...question,
+          answers: [...question.answers, answer],
+        }
+      }
+      return question
+    })
+    console.log('hi')
+
+    localStorage.setItem('questions', JSON.stringify(updatedQuestions))
+    setAnswer('')
+  }
+
+  const changeHandler = (e) => {
+    setAnswer(e.target.value)
+  }
+
+  const handleAnswerEdit = (index) => {
+    setEditingIndex(index)
+    setEditValue(answersArray[index])
   }
 
   const handleAnswerDelete = (index) => {
-    const newAnswers = answers.filter((_, i) => i !== index)
-    setAnswers(newAnswers)
-  }
+    const updatedAnswers = [...answersArray]
+    updatedAnswers.splice(index, 1)
 
-  const handleAnswerEdit = (index, value) => {
-    setEditingIndex(index)
-    setEditValue(value)
+    const updatedQuestions = answerrr.map((question) => {
+      if (question.id === idx) {
+        return {
+          ...question,
+          answers: updatedAnswers,
+        }
+      }
+      return question
+    })
+
+    localStorage.setItem('questions', JSON.stringify(updatedQuestions))
+    navigate(`/${idx}`)
   }
 
   return (
     <AnswerContainer>
-      <AnswerList>
-        {answers.map((answer, index) => (
+      <H2Tag>Answers</H2Tag>
+      <div>
+        {answersArray.map((ans, index) => (
           <AnswerItem key={index}>
-            {editingIndex === index ? <AnswerInput value={editValue} onChange={(e) => setEditValue(e.target.value)} /> : <div>{answer}</div>}
-            <div>
-              {editingIndex === index ? <AnswerButton onClick={handleAnswerSubmit}>Save</AnswerButton> : <AnswerEditButton onClick={() => handleAnswerEdit(index, answer)}>Edit</AnswerEditButton>}
-              <AnswerDeleteButton onClick={() => handleAnswerDelete(index)}>Delete</AnswerDeleteButton>
-            </div>
+            {editingIndex === index ? <AnswerInput value={editValue} onChange={(e) => setEditValue(e.target.value)} /> : <AnswerDiv>{ans}</AnswerDiv>}
+            <BtnContaniner>
+              {editingIndex === index ? (
+                <>
+                  <AnswerEditButton
+                    onClick={() => {
+                      const updatedAnswers = [...answersArray]
+                      updatedAnswers[index] = editValue
+
+                      const updatedQuestions = answerrr.map((question) => {
+                        if (question.id === idx) {
+                          return {
+                            ...question,
+                            answers: updatedAnswers,
+                          }
+                        }
+                        return question
+                      })
+
+                      localStorage.setItem('questions', JSON.stringify(updatedQuestions))
+                      setEditingIndex(-1)
+                    }}
+                  >
+                    Save
+                  </AnswerEditButton>
+                  <AnswerDeleteButton onClick={() => setEditingIndex(-1)}>Cancel</AnswerDeleteButton>
+                </>
+              ) : (
+                <>
+                  <AnswerEditButton onClick={() => handleAnswerEdit(index)}>Edit</AnswerEditButton>
+                  <AnswerDeleteButton onClick={() => handleAnswerDelete(index)}>Delete</AnswerDeleteButton>
+                </>
+              )}
+            </BtnContaniner>
           </AnswerItem>
         ))}
-      </AnswerList>
-      <h3>Your Answer</h3>
+      </div>
+
       <AnswerForm onSubmit={handleAnswerSubmit}>
-        <AnswerInput placeholder="" value={answer} onChange={(e) => setAnswer(e.target.value)} rows={4} />
-        <AnswerButton type="submit">{editingIndex !== -1 ? 'Save Edit' : 'Post Your Answer'}</AnswerButton>
+        <H3Tag>Your Answer</H3Tag>
+        <AnswerInput placeholder="" value={answer} onChange={changeHandler} rows={4} />
+        <AnswerButton type="submit">Post Your Answer</AnswerButton>
       </AnswerForm>
     </AnswerContainer>
   )

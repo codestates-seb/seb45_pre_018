@@ -8,7 +8,7 @@ import Comment from '../Answer'
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 20px;
+  margin: 20px 0 20px 0;
   width: 1300px;
   height: 2000px;
 `
@@ -17,13 +17,13 @@ const TopDiv = styled.div`
   display: flex;
   justify-content: space-between;
   font-size: 2rem;
-  margin-left: 20px;
-  height: 7%;
+  margin: 0 40px;
+  height: 5%;
 `
 
 const TopSubDiv = styled.div`
   display: flex;
-  margin-left: 23px;
+  margin-left: 40px;
 `
 
 const DateDiv = styled.div`
@@ -38,7 +38,7 @@ const Span = styled.span`
 const Mainwrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 20px;
+  margin: 20px 20px 20px 40px;
 `
 
 const PTage = styled.div`
@@ -88,7 +88,7 @@ const Btns = styled.button`
   border-radius: 10px;
 
   &:hover {
-    background-color: #a8c5e0;
+    color: black;
   }
 `
 
@@ -367,7 +367,7 @@ const QuestionDetail = () => {
           </Bubble>
         )}
       </Mainwrapper>
-      <Comment selectedQuestion={selectedQuestion} />
+      <Comment />
     </MainContainer>
   )
 }
