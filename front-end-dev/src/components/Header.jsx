@@ -16,6 +16,17 @@ const Nav = styled.nav`
   z-index: 100;
   border-bottom: 1px solid #ccc;
 `;
+const StyledLink = styled(Link)`
+  font-weight: bold;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #4f4f4f;
+  &:hover {
+    color: black;
+  }
+`;
 
 const Logoimg = styled.img`
   width: 200px;
