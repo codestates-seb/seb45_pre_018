@@ -23,14 +23,19 @@ public interface AnswerMapper {
 
         System.out.println(requestBody.getId());
         System.out.println(requestBody.getQuestionId());
+        System.out.println(requestBody.getMemberId());
+
 
         memberEntity.setId(requestBody.getId());
+        memberEntity.setMemberId(requestBody.getMemberId());
         question.setQuestionId(requestBody.getQuestionId());
+
 
         answer.setMemberEntity(memberEntity);
         answer.setQuestion(question);
-
+        answer.setMemberId(requestBody.getMemberId());
         answer.setContent(requestBody.getContent());
+
 
         return answer;
     }
@@ -53,7 +58,7 @@ public interface AnswerMapper {
                 answer.getAnswerId(),
                 answer.getId(),
                 answer.getQuestionId(),
-                //answer.getMemberEntity().getMemberId(),
+                answer.getMemberEntity().getMemberId(),
                 answer.getContent(),
                 answer.getCreatedAt(),
                 answer.getModifiedAt()

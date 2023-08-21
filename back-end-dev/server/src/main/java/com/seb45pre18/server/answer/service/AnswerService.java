@@ -21,6 +21,7 @@ public class AnswerService {
     public Answer createAnswer(Answer answer) {
         System.out.println(answer.getQuestion().getQuestionId());
         System.out.println(answer.getMemberEntity().getId());
+        System.out.println(answer.getMemberEntity().getMemberId());
 
         return answerRepository.save(answer);
     }

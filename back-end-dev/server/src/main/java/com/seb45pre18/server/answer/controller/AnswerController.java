@@ -6,7 +6,6 @@ import com.seb45pre18.server.answer.dto.AnswerResponseDto;
 import com.seb45pre18.server.answer.entity.Answer;
 import com.seb45pre18.server.answer.mapper.AnswerMapper;
 import com.seb45pre18.server.answer.service.AnswerService;
-import com.seb45pre18.server.question.entity.Question;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +29,12 @@ public class AnswerController {
     @PostMapping
     public ResponseEntity postAnswer(@Valid @RequestBody AnswerPostDto requestBody){
 
-
         Answer answer = mapper.answerPostToAnswer(requestBody);
+
         Answer savedAnswer = answerService.createAnswer(answer);
         savedAnswer.setQuestionId(savedAnswer.getQuestion().getQuestionId());
         savedAnswer.setId(savedAnswer.getMemberEntity().getId());
+        savedAnswer.setMemberId(savedAnswer.getMemberId());
 
         AnswerResponseDto responseDto = mapper.answerToAnswerResponse(savedAnswer);
 
@@ -54,6 +54,7 @@ public class AnswerController {
 
         response.setQuestionId(response.getQuestion().getQuestionId());
         response.setId(response.getMemberEntity().getId());
+        response.setMemberId(response.getMemberId());
 
         return new ResponseEntity<>(mapper.answerToAnswerResponse(response), HttpStatus.OK);
     }
@@ -64,6 +65,9 @@ public class AnswerController {
         Answer response = answerService.findAnswer(answerId);
         response.setQuestionId(response.getQuestion().getQuestionId());
         response.setId(response.getMemberEntity().getId());
+
+        AnswerResponseDto responseDto = mapper.answerToAnswerResponse(response);
+        responseDto.setMemberId(response.getMemberEntity().getMemberId()); // memberId 설정
 
         return new ResponseEntity<>(mapper.answerToAnswerResponse(response), HttpStatus.OK);
     }
@@ -78,6 +82,7 @@ public class AnswerController {
                     AnswerResponseDto dto = mapper.answerToAnswerResponse(answer);
                     dto.setQuestionId(answer.getQuestion().getQuestionId()); // QuestionId 설정
                     dto.setId(answer.getMemberEntity().getId()); // memberId 설정
+                    dto.setMemberId(answer.getMemberEntity().getMemberId());
                     return dto;
                 })
                 .collect(Collectors.toList());

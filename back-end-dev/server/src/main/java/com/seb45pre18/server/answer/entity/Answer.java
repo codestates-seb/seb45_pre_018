@@ -26,6 +26,7 @@ public class Answer extends BaseTime{
 
     private Long Id;
     private Long questionId;
+    private String memberId;
 
     // 회원과 답변 1:N관계 매핑
     @ManyToOne

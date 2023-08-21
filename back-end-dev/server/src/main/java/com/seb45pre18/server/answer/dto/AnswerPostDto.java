@@ -9,6 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AnswerPostDto {
     private Long id;
+    private String memberId;
     private Long questionId;
     private String content;
 
