@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { styled } from 'styled-components'
-import { v4 as uuidv4 } from 'uuid'
+import globalAxios from '../../data/data'
 
 const QuestionContainer = styled.div`
   display: flex;
@@ -11,7 +11,7 @@ const QuestionContainer = styled.div`
 `
 
 const H1Tag = styled.h1`
-  background-image: url('../../public/blitz.jpg');
+  background-image: url('/blitz.jpg');
   background-size: cover;
   height: 130px;
   margin-bottom: 10px;
@@ -107,13 +107,13 @@ const TitleLengthCheckDive = styled.div`
 const ToolongText = styled.div`
   color: red;
 `
-
 const Question = () => {
   const [currentStep, setCurrentStep] = useState(1)
   const [titleCheck, setTitleCheck] = useState('')
   const [detailCheck, setDetailCheck] = useState('')
   const [expectCheck, setExpectCheck] = useState('')
   const [tagCheck, setTagCheck] = useState('')
+  const [index, setIndex] = useState(1)
 
   const navigate = useNavigate()
 
@@ -133,32 +133,36 @@ const Question = () => {
     setTagCheck(event.target.value)
   }
 
-  // 클릭 핸들러를 통해 isReviewing 상태를 변경하는 함수
+  const postQuestion = async (data) => {
+    try {
+      const response = await globalAxios.post('/questions', data)
+      console.log('response >>', response)
+      navigate('/')
+    } catch (err) {
+      console.log('Error >>', err)
+    }
+  }
 
   const onSubmitHandler = (e) => {
     e.preventDefault()
-    const newId = uuidv4()
+    setIndex((prev) => prev + 1)
     const seoulTime = new Date()
     seoulTime.setHours(seoulTime.getHours() + 9)
     const newQuestion = {
-      id: newId,
+      questionId: index,
       title: titleCheck,
-      detail: detailCheck,
+      content: detailCheck,
       expect: expectCheck,
       tags: tagCheck,
       createdAt: seoulTime.toISOString(),
-      modified: seoulTime.toISOString(),
-      views: 0,
+      modifiedAt: seoulTime.toISOString(),
+      view: 0,
       answers: [],
+      answer_count: 0,
+      memberId: 1,
     }
 
-    const questions = JSON.parse(localStorage.getItem('questions')) || []
-    questions.push(newQuestion)
-    localStorage.setItem('questions', JSON.stringify(questions))
-    {
-      console.log(new Date().toISOString())
-    }
-    navigate('/')
+    postQuestion(newQuestion)
   }
 
   useEffect(() => {

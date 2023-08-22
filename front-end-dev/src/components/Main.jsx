@@ -1,6 +1,8 @@
 import { styled } from 'styled-components'
 import AskBtn from './AskBtn'
 import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import globalAxios from '../data/data'
 
 const MainContainer = styled.div`
   display: flex;
@@ -129,40 +131,52 @@ const detailDate = (a) => {
 }
 
 const Main = () => {
-  const questions = JSON.parse(localStorage.getItem('questions')) || []
+  const [questions, setQuestions] = useState([])
+
+  const getQuestion = async () => {
+    try {
+      const response = await globalAxios.get('/questions?page=1')
+      const getData = response.data
+      setQuestions(getData.data)
+      console.log('response >>', getData)
+    } catch (err) {
+      console.log('Error >>', err)
+    }
+  }
+
+  useEffect(() => {
+    getQuestion()
+  }, [])
 
   return (
     <MainContainer>
       <TopDiv>
         All Questions<AskBtn>Ask Question</AskBtn>
       </TopDiv>
-      {questions
-        .slice()
-        .reverse()
-        .map((question, index) => (
-          <Mainwrapper key={index}>
-            <MainDivLeft>
-              <SubDivLeft>0 votes</SubDivLeft>
-              <SubDivLeft>{question.answers.length} answers</SubDivLeft>
-              <SubDivLeft>{question.views} views</SubDivLeft>
-            </MainDivLeft>
-            <MainDivRight>
-              <SubDivRight>
-                <TitleDiv>
-                  <StyledLink to={question.id}>{question.title} </StyledLink>
-                </TitleDiv>
-                <ContentsDiv> {question.detail}</ContentsDiv>
-                <TagSideDiv>
-                  {question.tags ? <Tags>{question.tags}</Tags> : <div></div>}
-                  <TagSideRight>
-                    <UserName>{question.id}</UserName>
-                    <DateDiv>asked {detailDate(new Date(question.createdAt))}</DateDiv>
-                  </TagSideRight>
-                </TagSideDiv>
-              </SubDivRight>
-            </MainDivRight>
-          </Mainwrapper>
-        ))}
+      {questions.slice().map((question, index) => (
+        <Mainwrapper key={index}>
+          <MainDivLeft>
+            <SubDivLeft>0 votes</SubDivLeft>
+            <SubDivLeft>{question.answer_count} answers</SubDivLeft>
+            <SubDivLeft>{question.view} views</SubDivLeft>
+          </MainDivLeft>
+          <MainDivRight>
+            <SubDivRight>
+              <TitleDiv>
+                <StyledLink to={`questions/${question.questionId}`}>{question.title}</StyledLink>
+              </TitleDiv>
+              <ContentsDiv> {question.content}</ContentsDiv>
+              <TagSideDiv>
+                {question.tags ? <Tags>{question.tags}</Tags> : <div></div>}
+                <TagSideRight>
+                  <UserName>{question.id}</UserName>
+                  <DateDiv>asked {detailDate(new Date(question.createdAt))}</DateDiv>
+                </TagSideRight>
+              </TagSideDiv>
+            </SubDivRight>
+          </MainDivRight>
+        </Mainwrapper>
+      ))}
     </MainContainer>
   )
 }

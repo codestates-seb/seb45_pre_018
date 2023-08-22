@@ -4,6 +4,7 @@ import AskBtn from '../AskBtn'
 import { useEffect, useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import Comment from '../Answer'
+import globalAxios from '../../data/data'
 
 const MainContainer = styled.div`
   display: flex;
@@ -154,7 +155,7 @@ const ShareBtns = styled.button`
   }
 `
 
-const WarningDiv = styled.li`
+const WarningDiv = styled.div`
   font-size: 1rem;
   color: red;
 `
@@ -181,57 +182,94 @@ const QuestionDetail = () => {
   const { idx } = useParams()
   const navigate = useNavigate()
 
-  const questions = JSON.parse(localStorage.getItem('questions')) || []
-  const selectedQuestion = questions.find((question) => question.id === idx)
-
+  const [questions, setQuestions] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [selectedQuestion, setselectedQuestion] = useState()
   const [isEditing, setIsEditing] = useState(false)
-  const [editedTitle, setEditedTitle] = useState(selectedQuestion.title)
-  const [editedExpect, setEditedExpect] = useState(selectedQuestion.expect)
-  const [editedDetail, setEditedDetail] = useState(selectedQuestion.detail)
+  const [editedTitle, setEditedTitle] = useState('')
+  const [editedExpect, setEditedExpect] = useState('')
+  const [editedDetail, setEditedDetail] = useState('')
   const [isCopied, setIsCopied] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [viewCount, setViewCount] = useState(selectedQuestion.views)
+  const [viewCount, setViewCount] = useState(0)
+
+  const getQuestion = async () => {
+    try {
+      const response = await globalAxios.get('questions?page=1')
+      const getData = response.data
+      setQuestions(getData.data)
+      setIsLoading(false)
+      console.log('response >>', getData)
+    } catch (err) {
+      console.log('Error >>', err)
+    }
+  }
 
   useEffect(() => {
-    const updatedViewCount = viewCount + 1
-    setViewCount(updatedViewCount)
-    selectedQuestion.views = updatedViewCount
-    localStorage.setItem('questions', JSON.stringify(questions))
+    getQuestion()
   }, [])
 
-  const handleDeleteClick = () => {
-    const deletedQuestions = questions.filter((question) => question.id !== idx)
-    localStorage.setItem('questions', JSON.stringify(deletedQuestions))
+  useEffect(() => {
+    if (!isLoading) {
+      const selectedQuestion = questions.find((question) => question.questionId == idx)
+      setselectedQuestion(selectedQuestion)
+      console.log(selectedQuestion)
+    }
+  }, [isLoading, idx, questions])
 
-    navigate('/')
+  // const selectedQuestion = questions.find((question) => question.questionId == idx)
+
+  useEffect(() => {
+    if (selectedQuestion) {
+      setEditedTitle(selectedQuestion.title)
+      setEditedExpect(selectedQuestion.expect)
+      setEditedDetail(selectedQuestion.content)
+      setViewCount(selectedQuestion.view)
+    }
+  }, [selectedQuestion])
+
+  useEffect(() => {
+    if (selectedQuestion) {
+      const updatedViewCount = viewCount + 1
+      setViewCount(updatedViewCount)
+      selectedQuestion.view = updatedViewCount
+    }
+  }, [selectedQuestion])
+
+  const handleDeleteClick = async () => {
+    try {
+      await globalAxios.delete(`questions/${idx}`)
+      navigate('/')
+    } catch (error) {
+      console.log('Error deleting question:', error)
+    }
   }
 
   const handleEditClick = () => {
     setIsEditing(true)
   }
 
-  const handleSaveClick = () => {
+  const handleSaveClick = async () => {
     setIsEditing(false)
-    const updatedQuestions = questions.map((question) => {
-      if (question.id === idx) {
-        return {
-          ...question,
-          title: editedTitle,
-          expect: editedExpect,
-          detail: editedDetail,
-          createdAt: new Date().toISOString(),
-          modified: new Date().toISOString(),
-        }
+
+    try {
+      const updatedQuestions = {
+        title: editedTitle,
+        expect: editedExpect,
+        content: editedDetail,
+        modifiedAt: new Date().toISOString(),
       }
-      return question
-    })
-    localStorage.setItem('questions', JSON.stringify(updatedQuestions))
+
+      await globalAxios.patch(`questions/${idx}`, updatedQuestions)
+    } catch (error) {
+      console.log('Error updating question:', error)
+    }
   }
 
   const handleCancelClick = () => {
     setEditedTitle(selectedQuestion.title)
     setEditedExpect(selectedQuestion.expect)
-    setEditedDetail(selectedQuestion.detail)
+    setEditedDetail(selectedQuestion.content)
     setIsEditing(false)
   }
 
@@ -264,110 +302,131 @@ const QuestionDetail = () => {
 
   return (
     <MainContainer>
-      <TopDiv>
-        {isEditing ? (
-          <WriteTitle>
-            <p>Title</p>
-            <InputTag type="text" value={editedTitle} onChange={handleTitleChange} />
-            {editedTitle.length <= 15 && (
-              <WarningDiv>
-                <li>Title must be at least 15 characters.</li>
-              </WarningDiv>
-            )}
-          </WriteTitle>
-        ) : (
-          <>
-            {editedTitle}
-            <AskBtn>Ask Question</AskBtn>
-          </>
-        )}
-      </TopDiv>
-      {!isEditing && (
-        <TopSubDiv>
-          <DateDiv>
-            <Span>Asked </Span>
-            {detailDate(new Date(selectedQuestion.createdAt))}
-          </DateDiv>
-          <DateDiv>
-            <Span>Modified </Span>
-            {detailDate(new Date(selectedQuestion.modified))}
-          </DateDiv>
-          <DateDiv>
-            <Span>Viewed </Span>
-            {selectedQuestion.views} times
-          </DateDiv>
-        </TopSubDiv>
-      )}
-
-      <Mainwrapper>
-        <PTage>
-          {isEditing ? (
-            <WriteTitle>
-              <p>Detail</p>
-              <TextArea value={editedDetail} onChange={handleDetailChange} />
-              {editedDetail !== editedExpect || editedDetail.length === 0 ? '' : <WarningDiv>Problem details and expected results must be different.</WarningDiv>}
-              {editedDetail.length < 20 && (
-                <>
-                  <WarningDiv> Minimum 20 characters.</WarningDiv>
-                </>
-              )}
-            </WriteTitle>
-          ) : (
-            editedDetail
-          )}
-        </PTage>
-        <PTage>
-          {isEditing ? (
-            <WriteTitle>
-              <p>Expect</p>
-              <TextArea value={editedExpect} onChange={handleExpectChange} />
-              {editedDetail !== editedExpect || editedExpect.length === 0 ? '' : <WarningDiv>Problem details and expected results must be different.</WarningDiv>}
-              {editedExpect.length < 20 && (
-                <>
-                  <WarningDiv> Minimum 20 characters.</WarningDiv>
-                </>
-              )}
-            </WriteTitle>
-          ) : (
-            editedExpect
-          )}
-        </PTage>
-        <Container>{selectedQuestion.tags && <Tags>{selectedQuestion.tags}</Tags>}</Container>
-        <Container>
-          <LeftContainer>
-            <Btns onClick={handleOpenModal}>Share</Btns>
+      {selectedQuestion && (
+        <>
+          <TopDiv>
             {isEditing ? (
-              <>
-                <Btns onClick={handleSaveClick} disabled={editedTitle.length <= 15 || editedDetail === editedExpect || editedDetail.length <= 20 || editedExpect.length <= 20}>
-                  Save
-                </Btns>
-                <Btns onClick={handleCancelClick}>Cancel</Btns>
-              </>
+              <WriteTitle>
+                <p>Title</p>
+                <InputTag type="text" value={editedTitle} onChange={handleTitleChange} />
+                {editedTitle.length <= 15 && (
+                  <WarningDiv>
+                    <li>Title must be at least 15 characters.</li>
+                  </WarningDiv>
+                )}
+              </WriteTitle>
             ) : (
-              <Btns onClick={handleEditClick}>Edit</Btns>
+              <>
+                {editedTitle}
+                <AskBtn>Ask Question</AskBtn>
+              </>
             )}
-            <Btns onClick={handleDeleteClick}>Delete</Btns>
-          </LeftContainer>
-          <RightContainer>
-            <div>asked {selectedQuestion.createdAt.slice(0, 10)}</div>
-            <div>{selectedQuestion.id}</div>
-          </RightContainer>
-        </Container>
+          </TopDiv>
+          {!isEditing && (
+            <TopSubDiv>
+              <DateDiv>
+                <Span>Asked </Span>
+                {detailDate(new Date(selectedQuestion.createdAt))}
+              </DateDiv>
+              <DateDiv>
+                <Span>Modified </Span>
+                {detailDate(new Date(selectedQuestion.modifiedAt))}
+              </DateDiv>
+              <DateDiv>
+                <Span>Viewed </Span>
+                {selectedQuestion.view} times
+              </DateDiv>
+            </TopSubDiv>
+          )}
 
-        {isModalOpen && (
-          <Bubble>
-            <p>Share a link to this question (Includes your user id)</p>
-            <InputTag value={window.location.href} readOnly />
-            <div>
-              <CopyToClipboard text={window.location.href}>
-                <ShareBtns onClick={handleCopyClick}>{isCopied ? 'Copied!' : 'Copy link'}</ShareBtns>
-              </CopyToClipboard>
-              <ShareBtns onClick={handleCloseModal}>Close</ShareBtns>
-            </div>
-          </Bubble>
-        )}
-      </Mainwrapper>
-      <Comment />
+          <Mainwrapper>
+            {isLoading ? (
+              <div>Loading...</div>
+            ) : (
+              <>
+                <PTage>
+                  {isEditing ? (
+                    <WriteTitle>
+                      <p>Detail</p>
+                      <TextArea value={editedDetail} onChange={handleDetailChange} />
+                      {editedDetail !== editedExpect || editedDetail.length === 0 ? (
+                        ''
+                      ) : (
+                        <WarningDiv>
+                          <li>Problem details and expected results must be different.</li>
+                        </WarningDiv>
+                      )}
+                      {editedDetail.length < 20 && (
+                        <>
+                          <WarningDiv>
+                            <li> Minimum 20 characters.</li>
+                          </WarningDiv>
+                        </>
+                      )}
+                    </WriteTitle>
+                  ) : (
+                    editedDetail
+                  )}
+                </PTage>
+                <PTage>
+                  {isEditing ? (
+                    <WriteTitle>
+                      <p>Expect</p>
+                      <TextArea value={editedExpect} onChange={handleExpectChange} />
+                      {editedDetail !== editedExpect || editedExpect.length === 0 ? '' : <WarningDiv>Problem details and expected results must be different.</WarningDiv>}
+                      {editedExpect.length < 20 && (
+                        <>
+                          <WarningDiv>
+                            <li> Minimum 20 characters.</li>
+                          </WarningDiv>
+                        </>
+                      )}
+                    </WriteTitle>
+                  ) : (
+                    editedExpect
+                  )}
+                </PTage>
+                <Container>{selectedQuestion.tags && <Tags>{selectedQuestion.tags}</Tags>}</Container>
+                <Container>
+                  <LeftContainer>
+                    <Btns onClick={handleOpenModal}>Share</Btns>
+                    {isEditing ? (
+                      <>
+                        <Btns onClick={handleSaveClick} disabled={editedTitle.length <= 15 || editedDetail === editedExpect || editedDetail.length <= 20 || editedExpect.length <= 20}>
+                          Save
+                        </Btns>
+                        <Btns onClick={handleCancelClick}>Cancel</Btns>
+                      </>
+                    ) : (
+                      <Btns onClick={handleEditClick}>Edit</Btns>
+                    )}
+                    <Btns onClick={handleDeleteClick}>Delete</Btns>
+                  </LeftContainer>
+                  <RightContainer>
+                    <div>asked {selectedQuestion.createdAt.slice(0, 10)}</div>
+                    <div>{selectedQuestion.id}</div>
+                  </RightContainer>
+                </Container>
+
+                {isModalOpen && (
+                  <Bubble>
+                    <p>Share a link to this question (Includes your user id)</p>
+                    <InputTag value={window.location.href} readOnly />
+                    <div>
+                      <CopyToClipboard text={window.location.href}>
+                        <ShareBtns onClick={handleCopyClick}>{isCopied ? 'Copied!' : 'Copy link'}</ShareBtns>
+                      </CopyToClipboard>
+                      <ShareBtns onClick={handleCloseModal}>Close</ShareBtns>
+                    </div>
+                  </Bubble>
+                )}
+              </>
+            )}
+          </Mainwrapper>
+
+          <Comment />
+        </>
+      )}
     </MainContainer>
   )
 }
