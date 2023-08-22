@@ -87,9 +87,9 @@ public interface QuestionMapper {
                 .map(answer -> AnswerResponseDto
                         .builder()
                         .answerId(answer.getAnswerId())
-                        .Id(answer.getId())
-                        .questionId(answer.getQuestionId())
-                        .memberId(answer.getMemberId())
+                        .Id(answer.getMemberEntity().getId())
+                        .questionId(answer.getQuestion().getQuestionId())
+                        .memberId(answer.getMemberEntity().getMemberId())
                         .content(answer.getContent())
                         .createdAt(answer.getCreatedAt())
                         .modifiedAt(answer.getModifiedAt())
