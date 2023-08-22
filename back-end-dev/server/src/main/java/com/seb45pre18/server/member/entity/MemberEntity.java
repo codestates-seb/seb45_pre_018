@@ -21,7 +21,7 @@ public class MemberEntity {
     @Column(nullable = false,updatable = false,unique = true,length = 8) // 아이디 5글자 제한
     private String memberId;
 
-    @Column(length = 16,nullable = false)//비밀번호 8글자 제한
+    @Column(length = 100,nullable = false)//비밀번호 8글자 제한
     private String password;
 
     @Column(length = 5,nullable = false)//이름 5글자 제한

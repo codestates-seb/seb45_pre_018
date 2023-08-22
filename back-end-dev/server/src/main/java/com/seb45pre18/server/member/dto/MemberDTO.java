@@ -15,10 +15,10 @@ import javax.validation.constraints.Size;
 public class MemberDTO {
     private Long id;
     @NotBlank
-    @Size(min = 5, max = 8)
+    @Size(max = 8)
     private String memberId;
     @NotBlank
-    @Size(min = 8, max = 16)
+    @Size(max = 100)
     private String password;
     @NotBlank
     @Size(max = 5)
