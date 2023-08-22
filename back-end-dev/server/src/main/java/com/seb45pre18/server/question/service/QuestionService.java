@@ -1,8 +1,8 @@
 package com.seb45pre18.server.question.service;
 
-import com.seb45pre18.server.member.entity.MemberEntity;
-import com.seb45pre18.server.member.service.MemberService;
+import com.seb45pre18.server.exception.GlobalExceptionCode;
 import com.seb45pre18.server.question.entity.Question;
+import com.seb45pre18.server.question.exception.QuestionException;
 import com.seb45pre18.server.question.repository.QuestionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,6 +38,10 @@ public class QuestionService {
                 .ifPresent(content -> findQuestion.setContent(content));
         Optional.ofNullable(question.getExpect())
                 .ifPresent(expect -> findQuestion.setExpect(expect));
+        Optional.ofNullable(question.getTags())
+                .ifPresent(tags -> findQuestion.setTags(tags));
+        Optional.ofNullable(question.getModifiedAt())
+                .ifPresent(modifiedAt -> findQuestion.setModifiedAt(modifiedAt));
 
         Question saveQuestion = questionRepository.save(findQuestion);
 
@@ -66,7 +70,8 @@ public class QuestionService {
     private Question findVerifiedQuestion(long questionId) {
         Optional<Question> optionalQuestion = questionRepository.findById(questionId);
 
-        Question findQuestion = optionalQuestion.orElseThrow(() -> new RuntimeException());
+        Question findQuestion = optionalQuestion.orElseThrow(() ->
+                new QuestionException(GlobalExceptionCode.QUESTION_NOT_FOUND));
 
         return findQuestion;
     }
