@@ -7,11 +7,11 @@
 </head>
 <body>
 <form action="/member/update" method="post">
-  <input type="hidden" th:value="${updateMember.id}" name="id"><br>
-  아이디: <input type="text" th:value="${updateMember.memberId}" name="memberId" readonly> <br>
-  비밀번호: <input type="text" th:value="${updateMember.password}" name="memberPassword"> <br>
-  이름: <input type="text" th:value="${updateMember.name}" name="name" readonly> <br>
-  <input type="submit" value="정보수정">
+    <input type="hidden" th:value="${updateMember.id}" name="id"><br>
+    아이디: <input type="text" th:value="${updateMember.memberId}" name="memberId" readonly> <br>
+    비밀번호: <input type="text" th:value="${updateMember.password}" minlength="8" maxlength="16" name="password"> <br>
+    이름: <input type="text" th:value="${updateMember.name}" name="name" readonly> <br>
+    <input type="submit" value="정보수정">
 </form>
 </body>
 </html>

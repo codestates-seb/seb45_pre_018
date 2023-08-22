@@ -13,9 +13,9 @@
 <!-- action속성: form에 작성한 데이터를 어디로 보낼지 지정 -->
 <form action="/member/save" method="post">
     <!-- name속성: 서버로 전송할 때 변수이름의 역할 -->
-    아이디: <input type="text" name="memberId" id="memberId"> <br>
-    비밀번호: <input type="password" name="password"> <br>
-    이름: <input type="text" name="name"> <br>
+    아이디: <input type="text"minlength="5" maxlength="8" name="memberId" id="memberId"> <br>
+    비밀번호: <input type="password" name="password" minlength="8" maxlength="16"> <br>
+    이름: <input type="text" name="name"maxlength="5"> <br>
     <input type="submit" value="회원가입">
 
 </form>
