@@ -189,7 +189,6 @@ const Answer = () => {
                           content: editValue,
                         })
                         setEditingIndex(-1)
-                        fetchAnswers()
                       }}
                     >
                       Save
