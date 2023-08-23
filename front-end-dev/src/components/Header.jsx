@@ -1,4 +1,5 @@
 import logo from "/logo-stackoverflow.png";
+
 import { styled } from "styled-components";
 import { Link } from "react-router-dom";
 import LoginBtn from './LoginBtn'
@@ -10,6 +11,7 @@ const Nav = styled.nav`
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 5px;
   padding: 5px;
   background-color: white;
   z-index: 100;
@@ -128,8 +130,22 @@ const Header = () => {
       </Left>
 
       <div></div>
+      <div></div>
 
       <RightDiv>
+      {islogin ? (
+          <Buttons
+            color="#39739d"
+            backgroundColor="#E1ECF4"
+            hoverColor="#A8C5E0"
+            onClick={logoutHandler}
+          >
+            Log out
+          </Buttons>
+        ) : (
+          <LoginBtn />
+        )}
+        
       {islogin ? (
         <div>
            <Buttons

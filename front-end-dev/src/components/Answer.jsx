@@ -179,13 +179,7 @@ const Answer = () => {
         {questions.answers ? (
           questions.answers.map((ans, index) => (
             <AnswerItem key={index}>
-              {editingIndex === index ? (
-                <AnswerInput value={editValue} onChange={(e) => setEditValue(e.target.value)} />
-              ) : editValue ? (
-                <AnswerDiv>{editValue}</AnswerDiv>
-              ) : (
-                <AnswerDiv>{ans.content}</AnswerDiv>
-              )}
+              {editingIndex === index ? <AnswerInput value={editValue} onChange={(e) => setEditValue(e.target.value)} /> : <AnswerDiv>{ans.content}</AnswerDiv>}
               <BtnContaniner>
                 {editingIndex === index ? (
                   <>
@@ -223,5 +217,7 @@ const Answer = () => {
     </AnswerContainer>
   )
 }
+
+export default Answer
 
 export default Answer

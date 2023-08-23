@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { styled } from "styled-components";
+import { useState } from 'react'
+import { styled } from 'styled-components'
 
 const MainContainer = styled.div`
   display: flex;
@@ -8,25 +8,25 @@ const MainContainer = styled.div`
   align-items: center;
   width: 1300px;
   height: 2000px;
-  margin-top: 50px;
+  margin: 20px 0 20px 0;
   font-size: 3rem;
-`;
+`
 const Italy = styled.div`
   margin-top: 30px;
   &:hover {
     color: #30bb75;
     cursor: pointer;
   }
-`;
+`
 const ColoredText = styled.span`
   color: ${(props) => props.color};
-`;
+`
 
 const About = () => {
-  const [ison, setIson] = useState(true);
+  const [ison, setIson] = useState(true)
   const onoffHandler = () => {
-    setIson((prev) => !prev);
-  };
+    setIson((prev) => !prev)
+  }
   return (
     <MainContainer>
       이탈리아의 날씨는?
@@ -43,7 +43,7 @@ const About = () => {
         )}
       </Italy>
     </MainContainer>
-  );
-};
+  )
+}
 
-export default About;
+export default About
