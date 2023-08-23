@@ -1,26 +1,27 @@
 import { styled } from 'styled-components'
 import AskBtn from './AskBtn'
 import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import globalAxios from '../data/data'
 
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 20px;
+  margin: 20px 0 20px 0;
   width: 1300px;
-  height: 2000px;
+  min-height: 2000px;
 `
 
 const TopDiv = styled.div`
   display: flex;
   justify-content: space-between;
   font-size: 2rem;
-  margin-left: 20px;
-  height: 7%;
+  margin: 0 40px;
+  height: 5%;
 `
 
 const Mainwrapper = styled.div`
   display: flex;
-
   border-top: 1px solid #ccc;
 `
 
@@ -28,7 +29,7 @@ const MainDivLeft = styled.div`
   display: flex;
   flex-direction: column;
   font-size: 1.2rem;
-  margin: 20px;
+  margin: 20px 20px 20px 40px;
 `
 const SubDivLeft = styled.div`
   margin-bottom: 10px;
@@ -130,40 +131,52 @@ const detailDate = (a) => {
 }
 
 const Main = () => {
-  const questions = JSON.parse(localStorage.getItem('questions')) || []
+  const [questions, setQuestions] = useState([])
+
+  const getQuestion = async () => {
+    try {
+      const response = await globalAxios.get('/questions?page=1')
+      const getData = response.data
+      setQuestions(getData.data)
+      console.log('response >>', getData)
+    } catch (err) {
+      console.log('Error >>', err)
+    }
+  }
+
+  useEffect(() => {
+    getQuestion()
+  }, [])
 
   return (
     <MainContainer>
       <TopDiv>
         All Questions<AskBtn>Ask Question</AskBtn>
       </TopDiv>
-      {questions
-        .slice()
-        .reverse()
-        .map((question, index) => (
-          <Mainwrapper key={index}>
-            <MainDivLeft>
-              <SubDivLeft>0 votes</SubDivLeft>
-              <SubDivLeft>{question.answers} answers</SubDivLeft>
-              <SubDivLeft>{question.views} views</SubDivLeft>
-            </MainDivLeft>
-            <MainDivRight>
-              <SubDivRight>
-                <TitleDiv>
-                  <StyledLink to={question.id}>{question.title} </StyledLink>
-                </TitleDiv>
-                <ContentsDiv> {question.detail}</ContentsDiv>
-                <TagSideDiv>
-                  {question.tags ? <Tags>{question.tags}</Tags> : <div></div>}
-                  <TagSideRight>
-                    <UserName>{question.id}</UserName>
-                    <DateDiv>asked {detailDate(new Date(question.createdAt))}</DateDiv>
-                  </TagSideRight>
-                </TagSideDiv>
-              </SubDivRight>
-            </MainDivRight>
-          </Mainwrapper>
-        ))}
+      {questions.slice().map((question, index) => (
+        <Mainwrapper key={index}>
+          <MainDivLeft>
+            <SubDivLeft>0 votes</SubDivLeft>
+            <SubDivLeft>{question.answer_count} answers</SubDivLeft>
+            <SubDivLeft>{question.view} views</SubDivLeft>
+          </MainDivLeft>
+          <MainDivRight>
+            <SubDivRight>
+              <TitleDiv>
+                <StyledLink to={`questions/${question.questionId}`}>{question.title}</StyledLink>
+              </TitleDiv>
+              <ContentsDiv> {question.content}</ContentsDiv>
+              <TagSideDiv>
+                {question.tags ? <Tags>{question.tags}</Tags> : <div></div>}
+                <TagSideRight>
+                  <UserName>{question.id}</UserName>
+                  <DateDiv>asked {detailDate(new Date(question.createdAt))}</DateDiv>
+                </TagSideRight>
+              </TagSideDiv>
+            </SubDivRight>
+          </MainDivRight>
+        </Mainwrapper>
+      ))}
     </MainContainer>
   )
 }

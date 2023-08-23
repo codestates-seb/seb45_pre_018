@@ -12,6 +12,7 @@ const Nav = styled.nav`
   justify-content: center;
   align-items: center;
   padding: 5px;
+  padding: 5px;
   background-color: white;
   z-index: 100;
   border-bottom: 1px solid #ccc;
@@ -87,30 +88,8 @@ const Buttons = styled.button`
   }
 `;
 
-const userData = [
-  {
-    id: "1",
-    isLogin: false,
-    full_name: "jason",
-    email: "1",
-    gender: "male",
-    date_of_birth: "2022.03.03",
-    country_code: "",
-    created_at: "",
-    password: "1",
-  },
-  {
-    id: "2",
-    full_name: "akiho",
-    email: "sirasu@yahoo.com",
-    gender: "female",
-    date_of_birth: "2022.04.04",
-    country_code: "81",
-    created_at: "",
-    password: "123456",
-  },
-];
-localStorage.setItem("user", JSON.stringify(userData));
+
+
 
 
 const Header = () => {
@@ -119,15 +98,16 @@ const Header = () => {
   const getData = JSON.parse(localStorage.getItem("login"));
   console.log(getData);
   useEffect(() => {
-    if (getData === "good") {
+    const jwtToken = localStorage.getItem('jwtToken');
+    if (jwtToken) {
       setislogin(true);
     } else {
       setislogin(false);
     }
-  }, [getData]);
+  }, []);
   const logoutHandler = () => {
+    localStorage.removeItem('jwtToken');
     setislogin(false);
-    localStorage.setItem("login", JSON.stringify(""));
     alert("로그아웃");
   };
   return (
@@ -150,10 +130,14 @@ const Header = () => {
       </Left>
 
       <div></div>
+      <div></div>
 
       <RightDiv>
+      {/*  */}
+        
       {islogin ? (
-          <Buttons
+        <div>
+           <Buttons
             color="#39739d"
             backgroundColor="#E1ECF4"
             hoverColor="#A8C5E0"
@@ -161,6 +145,16 @@ const Header = () => {
           >
             Log out
           </Buttons>
+          <Link to='mypage'><Buttons color="#39739d"
+            backgroundColor="#E1ECF4"
+            hoverColor="#39739d">
+              MyPage
+
+          </Buttons></Link>
+
+        </div>
+         
+          
         ) : (
           <LoginBtn />
         )}
