@@ -2,6 +2,7 @@ package com.seb45pre18.server.question.dto;
 
 import com.seb45pre18.server.member.entity.MemberEntity;
 import lombok.Getter;
+import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
@@ -16,6 +17,9 @@ public class QuestionPostDto {
 
     @NotBlank
     private String expect;
+
+    @Nullable
+    private String tags;
 
     @Positive
     private long memberId;
