@@ -11,7 +11,7 @@ const MainContainer = styled.div`
   flex-direction: column;
   margin: 20px 0 20px 0;
   width: 1300px;
-  height: 2000px;
+  min-height: 2000px;
 `
 
 const TopDiv = styled.div`
@@ -191,7 +191,7 @@ const QuestionDetail = () => {
   const [editedDetail, setEditedDetail] = useState('')
   const [isCopied, setIsCopied] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [viewCount, setViewCount] = useState(0)
+  const [viewCount, setViewCount] = useState(1)
 
   const getQuestion = async () => {
     try {
@@ -205,6 +205,21 @@ const QuestionDetail = () => {
     }
   }
 
+  // const updatedHandler = async () => {
+  //   try {
+  //     const updatedQuestions = {
+  //       title: editedTitle,
+  //       expect: editedExpect,
+  //       content: editedDetail,
+  //       view: viewCount,
+  //     }
+
+  //     await globalAxios.patch(`questions/${idx}`, updatedQuestions)
+  //   } catch (error) {
+  //     console.log('Error updating question:', error)
+  //   }
+  // }
+
   useEffect(() => {
     getQuestion()
   }, [])
@@ -213,7 +228,6 @@ const QuestionDetail = () => {
     if (!isLoading) {
       const selectedQuestion = questions.find((question) => question.questionId == idx)
       setselectedQuestion(selectedQuestion)
-      console.log(selectedQuestion)
     }
   }, [isLoading, idx, questions])
 

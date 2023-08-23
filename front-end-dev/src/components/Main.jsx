@@ -9,7 +9,7 @@ const MainContainer = styled.div`
   flex-direction: column;
   margin: 20px 0 20px 0;
   width: 1300px;
-  height: 2000px;
+  min-height: 2000px;
 `
 
 const TopDiv = styled.div`

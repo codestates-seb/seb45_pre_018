@@ -1,6 +1,7 @@
-import { useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
+import globalAxios from '../data/data'
+import { useParams } from 'react-router-dom'
 
 const AnswerContainer = styled.div`
   margin: 20px 0 20px 0;
@@ -96,32 +97,53 @@ const H3Tag = styled.h3`
 `
 
 const Answer = () => {
+  const [questions, setQuestions] = useState([])
   const [answer, setAnswer] = useState()
   const [editingIndex, setEditingIndex] = useState(-1)
   const [editValue, setEditValue] = useState('')
 
   const { idx } = useParams()
-  const navigate = useNavigate()
-  const answerrr = JSON.parse(localStorage.getItem('questions')) || []
+
+  const [answerrr, setAnswerrr] = useState([])
 
   const selectedAnswer = answerrr.find((answer) => answer.id === idx) || { answers: [] }
   const answersArray = Array.isArray(selectedAnswer.answers) ? selectedAnswer.answers : [selectedAnswer.answers]
-  const handleAnswerSubmit = (e) => {
+
+  const fetchAnswers = async () => {
+    try {
+      const response = await globalAxios.get(`questions/${idx}`)
+      const data = response.data
+      setAnswerrr(data.answers || [])
+      setQuestions(data)
+    } catch (error) {
+      console.log('Error fetching answers:', error)
+    }
+  }
+  useEffect(() => {
+    // 서버에서 데이터를 가져오는 부분
+
+    fetchAnswers()
+  }, [idx])
+
+  const handleAnswerSubmit = async (e) => {
     e.preventDefault()
 
-    const updatedQuestions = answerrr.map((question) => {
-      if (question.id === idx) {
-        return {
-          ...question,
-          answers: [...question.answers, answer],
-        }
-      }
-      return question
-    })
-    console.log('hi')
+    const updatedQuestion = {
+      memberId: 1,
+      id: 1,
+      questionId: questions.questionId,
+      content: answer,
+      // answers: [...answersArray, answer], // 기존 답변 배열에 새로운 답변 추가
+    }
 
-    localStorage.setItem('questions', JSON.stringify(updatedQuestions))
-    setAnswer('')
+    try {
+      await globalAxios.post('answers', updatedQuestion) // 업데이트된 질문 객체를 서버에 보내어 업데이트
+      fetchAnswers()
+      setAnswer('')
+    } catch (error) {
+      console.log('Error updating question:', error)
+      console.log(updatedQuestion)
+    }
   }
 
   const changeHandler = (e) => {
@@ -131,68 +153,61 @@ const Answer = () => {
   const handleAnswerEdit = (index) => {
     setEditingIndex(index)
     setEditValue(answersArray[index])
+
+    // await globalAxios.patch(`answers/${answerId}`, {
+    //   content: editValue,
+    // });
   }
 
-  const handleAnswerDelete = (index) => {
-    const updatedAnswers = [...answersArray]
-    updatedAnswers.splice(index, 1)
+  const handleAnswerDelete = async (answerId) => {
+    try {
+      await globalAxios.delete(`answers/${answerId}`)
+      fetchAnswers()
+    } catch (error) {
+      console.log('Error deleting question:', error)
+    }
 
-    const updatedQuestions = answerrr.map((question) => {
-      if (question.id === idx) {
-        return {
-          ...question,
-          answers: updatedAnswers,
-        }
-      }
-      return question
-    })
-
-    localStorage.setItem('questions', JSON.stringify(updatedQuestions))
-    navigate(`/${idx}`)
+    // localStorage.setItem('questions', JSON.stringify(updatedQuestions))
+    // navigate(`/${idx}`)
   }
 
   return (
     <AnswerContainer>
+      {console.log(questions.answers)}
       <H2Tag>Answers</H2Tag>
       <div>
-        {answersArray.map((ans, index) => (
-          <AnswerItem key={index}>
-            {editingIndex === index ? <AnswerInput value={editValue} onChange={(e) => setEditValue(e.target.value)} /> : <AnswerDiv>{ans}</AnswerDiv>}
-            <BtnContaniner>
-              {editingIndex === index ? (
-                <>
-                  <AnswerEditButton
-                    onClick={() => {
-                      const updatedAnswers = [...answersArray]
-                      updatedAnswers[index] = editValue
-
-                      const updatedQuestions = answerrr.map((question) => {
-                        if (question.id === idx) {
-                          return {
-                            ...question,
-                            answers: updatedAnswers,
-                          }
-                        }
-                        return question
-                      })
-
-                      localStorage.setItem('questions', JSON.stringify(updatedQuestions))
-                      setEditingIndex(-1)
-                    }}
-                  >
-                    Save
-                  </AnswerEditButton>
-                  <AnswerDeleteButton onClick={() => setEditingIndex(-1)}>Cancel</AnswerDeleteButton>
-                </>
-              ) : (
-                <>
-                  <AnswerEditButton onClick={() => handleAnswerEdit(index)}>Edit</AnswerEditButton>
-                  <AnswerDeleteButton onClick={() => handleAnswerDelete(index)}>Delete</AnswerDeleteButton>
-                </>
-              )}
-            </BtnContaniner>
-          </AnswerItem>
-        ))}
+        {questions.answers ? (
+          questions.answers.map((ans, index) => (
+            <AnswerItem key={index}>
+              {editingIndex === index ? <AnswerInput value={editValue} onChange={(e) => setEditValue(e.target.value)} /> : <AnswerDiv>{ans.content}</AnswerDiv>}
+              <BtnContaniner>
+                {editingIndex === index ? (
+                  <>
+                    <AnswerEditButton
+                      onClick={() => {
+                        globalAxios.patch(`answers/${ans.answerId}`, {
+                          content: editValue,
+                        })
+                        setEditingIndex(-1)
+                        fetchAnswers()
+                      }}
+                    >
+                      Save
+                    </AnswerEditButton>
+                    <AnswerDeleteButton onClick={() => setEditingIndex(-1)}>Cancel</AnswerDeleteButton>
+                  </>
+                ) : (
+                  <>
+                    <AnswerEditButton onClick={() => handleAnswerEdit(index)}>Edit</AnswerEditButton>
+                    <AnswerDeleteButton onClick={() => handleAnswerDelete(ans.answerId)}>Delete</AnswerDeleteButton>
+                  </>
+                )}
+              </BtnContaniner>
+            </AnswerItem>
+          ))
+        ) : (
+          <p>Loading answers...</p>
+        )}
       </div>
 
       <AnswerForm onSubmit={handleAnswerSubmit}>
