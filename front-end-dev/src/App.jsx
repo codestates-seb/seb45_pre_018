@@ -9,6 +9,7 @@ import About from './components/pages/About'
 import Product from './components/pages/Product'
 import LoginPage from './components/pages/LoginPage'
 import SignUpPage from './components/pages/SignUpPage'
+import MyPage from './components/pages/MyPage'
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
       { path: '/login', element: <LoginPage /> },
       { path: 'signup', element: <SignUpPage /> },
       { path: 'question', element: <Question /> },
+      { path: 'mypage', element: <MyPage /> },
       { path: 'questions/:idx', element: <QuestionDetail /> },
       { path: 'forTeam', element: <ForTeam /> },
       { path: 'about', element: <About /> },

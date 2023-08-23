@@ -133,18 +133,7 @@ const Header = () => {
       <div></div>
 
       <RightDiv>
-      {islogin ? (
-          <Buttons
-            color="#39739d"
-            backgroundColor="#E1ECF4"
-            hoverColor="#A8C5E0"
-            onClick={logoutHandler}
-          >
-            Log out
-          </Buttons>
-        ) : (
-          <LoginBtn />
-        )}
+      {/*  */}
         
       {islogin ? (
         <div>
