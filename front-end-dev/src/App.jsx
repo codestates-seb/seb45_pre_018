@@ -9,7 +9,7 @@ import About from "./components/pages/About";
 import Product from "./components/pages/Product";
 import LoginPage from "./components/pages/LoginPage";
 import SignUpPage from "./components/pages/SignUpPage";
-
+import MyPage from './components/pages/MyPage'
 const router = createBrowserRouter([
   {
     path: "/",
@@ -17,6 +17,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <Home /> },
       { path: "/login", element: <LoginPage /> },
+      { path: "mypage", element: <MyPage /> },
       { path:'signup',element:<SignUpPage/>},
       { path: "question", element: <Question /> },
       { path: ":idx", element: <QuestionDetail /> },

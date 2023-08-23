@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { useState } from 'react'
-
+import globalAxios from '../../data/data'
 
 const SignContainer = styled.div`
 display:flex;
@@ -10,7 +10,8 @@ width:100wh;
 width:500px;
 height:600px;
 
-border:1px solid#FFC043;
+
+
 padding-top:50px;
 border-radius:20px 20px;
 
@@ -71,41 +72,64 @@ transition: all .3s;
 
 
 const SignUpPage  = ()=>{
-    const [newName ,setNewName] = useState('');
+const [newName ,setNewName] = useState('');
 const [newId , setNewId] = useState('');
 const [newPw,setNewPw] = useState('');
+const [pwCheck, setPwCheck] = useState('')
 
-const signComplete = () => {
-    const newUserData = [{
-      id: '',
-      full_name: newName,
-      email: newId,
-      gender: 'male',
-      date_of_birth: '2022.03.03',
-      country_code: '',
-      created_at: '',
-      password: newPw,
-    }];
+const generateJwtToken = async () => {
+    try {
+      const response = await globalAxios.post("/member/save", {
+        name:newName,
+        memberId: newId,
+        password: newPw,
+      });
+
+      if (response.status === 200) {
+        const jwtToken = response.data.token;
+        // 이후 토큰을 사용하거나 저장할 수 있습니다.
+        localStorage.setItem('jwtToken', jwtToken);
+        console.log("JWT Token:", jwtToken);
+      } else {
+        console.error("JWT Token 생성 실패");
+      }
+    } catch (error) {
+      console.error("JWT Token 생성 중 오류 발생:", error);
+    }
+  };
+
+
+const signComplete = async() => {
     
-    const usersData = JSON.parse(localStorage.getItem('user')) || [];
+    
+ 
 
-    const upDateUserData = [...usersData,newUserData]
+  
+    // if(isDuplicate){
+    //     alert('중복된 아이디 입니다')
+    // }
     if(newId.length < 5 ){
-        alert('5이상')
+        alert('아이디는 5~8글자 사이로 작성해주세요 ')
     }else if(newId.length > 8 ){
-        alert('8미만')
+        alert('아이디는 5~8글자 사이로 작성해주세요')
     }else if(newPw.length < 8){
-        alert('8이상')
+        alert('비밀번호는 8~12글자 사이로 작성해주세요')
     }else if(newPw.length >12){
-        alert('12미만')
-    }else{ localStorage.setItem('user', JSON.stringify(upDateUserData));
-
-    console.log('완료');
-    // 로컬 스토리지에 userData 저장
-}
-
+        alert('비밀번호는 8~12글자 사이로 작성해주세요')
+    }else if(pwCheck!==newPw || newPw !==pwCheck){
+        alert('비밀번호를 확인해주세요')
+    }else{ 
     
-   
+     await generateJwtToken();
+    alert('회원가입이 완료되었습니다 로그인을 진행해 주세요')
+
+    window.location.href = "http://localhost:3006/login";
+        
+    console.log('완료');
+
+    // 로컬 스토리지에 userData 저장
+    }
+
   };
    
     return(
@@ -121,11 +145,11 @@ const signComplete = () => {
                 console.log(newId)}}/>
                 
                     <p>비밀번호</p>
-                <SignInputStyle type="text" value ={newPw} onChange={(e)=>{setNewPw(e.target.value) 
-                console.log(newPw)}}/>
+                <SignInputStyle type="password" value ={newPw} onChange={(e)=>{setNewPw(e.target.value) 
+                }}/>
                 
                     <p>비밀번호 확인</p>
-                <SignInputStyle type="text"/>
+                <SignInputStyle type="password" value={pwCheck} onChange={(e)=>{setPwCheck(e.target.value)}}/>
                
             </SignTypingArea>
             <SignButtonArea>

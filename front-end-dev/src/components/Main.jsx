@@ -1,7 +1,8 @@
 import { styled } from "styled-components";
 import AskBtn from "./AskBtn";
 import { Link } from "react-router-dom";
-
+import { useState,useEffect } from "react";
+import globalAxios from "../data/data.js"
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -129,7 +130,21 @@ const detailDate = (a) => {
 };
 
 const Main = () => {
-  const questions = JSON.parse(localStorage.getItem("questions")) || [];
+  const [questions, setQuestions] = useState([])
+  const getQuestion = async () => {
+    try {
+      const response = await globalAxios.get('questions?page=1')
+      const getData = response.data
+      setQuestions(getData.data)
+      console.log('response >>', getData)
+    } catch (err) {
+      console.log('Error >>', err)
+    }
+  }
+
+  useEffect(() => {
+    getQuestion()
+  }, [])
 
   return (
     <MainContainer>
@@ -143,22 +158,20 @@ const Main = () => {
           <Mainwrapper key={index}>
             <MainDivLeft>
               <SubDivLeft>0 votes</SubDivLeft>
-              <SubDivLeft>{question.answers} answers</SubDivLeft>
-              <SubDivLeft>{question.views} views</SubDivLeft>
+              <SubDivLeft>{question.answer} answers</SubDivLeft>
+              <SubDivLeft>{question.view} views</SubDivLeft>
             </MainDivLeft>
             <MainDivRight>
               <SubDivRight>
                 <TitleDiv>
                   <StyledLink to={question.id}>{question.title} </StyledLink>
                 </TitleDiv>
-                <ContentsDiv> {question.detail}</ContentsDiv>
+                <ContentsDiv> {question.content}</ContentsDiv>
                 <TagSideDiv>
                   {question.tags ? <Tags>{question.tags}</Tags> : <div></div>}
                   <TagSideRight>
                     <UserName>{question.id}</UserName>
-                    <DateDiv>
-                      asked {detailDate(new Date(question.createdAt))}
-                    </DateDiv>
+                    <DateDiv>asked {detailDate(new Date(question.createdAt))}</DateDiv>
                   </TagSideRight>
                 </TagSideDiv>
               </SubDivRight>

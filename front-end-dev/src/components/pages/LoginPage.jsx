@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logo from "/logo-stackoverflow.png";
 import SignUpBtn from "../SignUpBtn.jsx";
-
+import globalAxios from "../../data/data.js";
 const LoginContainer = styled.div`
   display: flex;
   background: rgba(255, 255, 255, 0);
@@ -61,46 +61,83 @@ const Logo = styled.img`
   margin-bottom: 20px;
 `;
 
+ 
+ const userData =   globalAxios.get('/member/login')
+                    .then(response=>{
+                      console.log('데이터받음',response)
+                    })
+                    .catch(error=>{
+                      console.log('에러',error)
+                    })
+
+ 
+
+
+
 const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
 
-  const userCheck = () => {
-    const storedValue = localStorage.getItem("user");
-    if (storedValue) {
-      const parsedStoredValue = JSON.parse(storedValue);
-
-      let result = null;
-      for (let el of parsedStoredValue) {
-        if (el.email === id && el.password === pw) {
-          result = "good";
-          el.isLogin = true;
-          break;
-        } else if (el.email === id) {
-          result = "pwfail";
-          break;
+  const userCheck =async () => {
+    
+   
+      try {
+        const response = await globalAxios.get('/member/login');
+        const users = response.data;
+    
+        let result = null;
+        for (let user of users) {
+          if (user.memberId === id && user.password === pw) {
+            result = 'good';
+            break;
+          } else if (user.memberId !== id) {
+            result = 'idfail';
+            break;
+          } else if (user.password !== pw) {
+            result = 'pwfail';
+          }
         }
-      }
-
-      localStorage.setItem("user", JSON.stringify(parsedStoredValue));
+    
+  
+      
 
       if (result === "good") {
-        alert("로그인성공");
-        setIsLogin(true);
-        localStorage.setItem("login", JSON.stringify(result));
+        try {
+          const response = await globalAxios.post('/member/login', {
+            memberId: id,
+            password: pw,
+          });
+        if (response.status === 200) {
+          const jwtToken = response.data.token;
+          // 토큰 저장
+          localStorage.setItem('jwtToken', jwtToken);
 
-        // 로그인 성공 시 메인 페이지로 리디렉션
-        window.location.href = "http://localhost:3006/";
-      } else if (result === "pwfail") {
+          alert('로그인 성공');
+          setIsLogin(true);
+          // 로그인 성공 시 메인 페이지로 리디렉션
+          window.location.href = 'http://localhost:3006/';
+        } else {
+          console.error('로그인 실패');
+        }
+      } catch (error) {
+        console.error('로그인 중 오류 발생:', error);
+      }
+      if (result === "pwfail") {
         alert("비밀번호가 일치하지 않습니다");
-      } else {
+      }
+      if(result==="idfail"){
         alert("등록되지 않은 계정입니다");
       }
     } else {
       alert("등록된 사용자가 없습니다");
+      console.log(isLogin);
     }
-    console.log(isLogin);
+  
+  }catch (error) {
+    console.error('로그인 중 오류 발생:', error);
+  }
+
   };
 
   return (
@@ -124,7 +161,7 @@ const LoginPage = () => {
             value={pw}
             onChange={(e) => {
               setPw(e.target.value);
-              console.log(pw);
+              
             }}
             placeholder="비밀번호를 입력하세요"
           />
